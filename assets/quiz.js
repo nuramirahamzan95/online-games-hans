@@ -24,7 +24,7 @@
 */
 (function(){
   OG.quiz=function(cfg){
-    const $=id=>document.getElementById(id);
+    const $=id=>document.getElementById(id),L=OG.L;
     const el={
       q:$('st-q'),ok:$('st-ok'),time:$('st-time'),dots:$('dots'),area:$('q-area'),
       res:$('result'),stars:$('stars'),title:$('res-title'),text:$('res-text'),list:$('res-list'),
@@ -65,7 +65,7 @@
         adv=setTimeout(advance,cfg.delay||900);
       }else{
         OG.say(el.status,cfg.explain(q,given),'oops');
-        el.next.querySelector('span').textContent=R.i+1>=total?'Tengok keputusan':'Seterusnya';
+        el.next.querySelector('span').textContent=R.i+1>=total?L('Tengok keputusan','See results'):L('Seterusnya','Next');
         el.next.hidden=false;
         el.next.focus({preventScroll:true});
       }
@@ -87,19 +87,19 @@
       const s=stars();
       OG.saveBest(cfg.game,s);
       el.stars.innerHTML=OG.starsHTML(s);
-      el.title.textContent=s===3?'Tahniah!':s===2?'Bagus!':'Teruskan usaha!';
-      el.text.textContent=`${R.score}/${total} betul · masa ${OG.fmt(R.elapsed)}`;
+      el.title.textContent=s===3?L('Tahniah!','Well done!'):s===2?L('Bagus!','Good job!'):L('Teruskan usaha!','Keep trying!');
+      el.text.textContent=`${R.score}/${total} ${L('betul','correct')} · ${L('masa','time')} ${OG.fmt(R.elapsed)}`;
       const wrong=R.log.filter(x=>!x.ok);
       el.list.hidden=!wrong.length;
-      el.list.innerHTML=wrong.length?'<h3>Semak semula</h3><ul>'+wrong.map(x=>{
+      el.list.innerHTML=wrong.length?`<h3>${L('Semak semula','Review')}</h3><ul>`+wrong.map(x=>{
         const r=cfg.review(x.q,x.given);
         return `<li><b>${r.sum}</b><small>${r.note}</small></li>`;
       }).join('')+'</ul>':'';
       const up=cfg.nextLevel&&s>=2?cfg.nextLevel(R.level):null;
       el.up.hidden=!up;
-      if(up){el.up.textContent='Cuba '+up.label;el.up.dataset.level=up.id;}
+      if(up){el.up.textContent=L('Cuba ','Try ')+up.label;el.up.dataset.level=up.id;}
       el.next.hidden=true;el.area.hidden=true;el.res.hidden=false;
-      OG.say(el.status,s===3?'Semua hampir sempurna. Syabas!':'Main lagi untuk dapat lebih bintang.',s===3?'good':'');
+      OG.say(el.status,R.score===total?L('Semua betul. Syabas!','All correct. Brilliant!'):s===3?L('Hampir sempurna. Syabas!','Almost perfect. Brilliant!'):L('Main lagi untuk dapat lebih bintang.','Play again to earn more stars.'),s===3?'good':'');
       cfg.onFinish&&cfg.onFinish();
       paint();
       el.again.focus({preventScroll:true});
@@ -115,7 +115,7 @@
         h+='<i class="'+(x?(x.ok?'ok':'bad'):(k===R.i&&!R.done?'cur':''))+'"></i>';
       }
       el.dots.innerHTML=h;
-      el.dots.setAttribute('aria-label',`Soalan ${Math.min(R.i+1,total)} daripada ${total}, ${R.score} betul`);
+      el.dots.setAttribute('aria-label',L(`Soalan ${Math.min(R.i+1,total)} daripada ${total}, ${R.score} betul`,`Question ${Math.min(R.i+1,total)} of ${total}, ${R.score} correct`));
     }
 
     el.next.addEventListener('click',advance);

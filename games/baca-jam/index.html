@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Belajar baca jam analog. Tengok jarum jam dan pilih pukul berapa.">
+<meta name="description" content="Belajar baca jam analog. Learn to tell the time on an analogue clock. Dwibahasa / bilingual.">
 <meta name="theme-color" content="#F3F7FC" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#161C26" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
-<title>Baca Jam · Main Nombor</title>
+<title data-en="Tell the Time · Main Nombor">Baca Jam · Main Nombor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Lexend:wght@400;500;600&display=swap">
@@ -16,7 +16,6 @@
 .clock-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0 4px}
 .clock{width:min(100%,300px);height:auto;display:block;overflow:visible}
 .clock .face{fill:var(--card);stroke:var(--edge);stroke-width:5}
-.clock .rim{fill:var(--box)}
 .clock .tick{stroke:var(--thin);stroke-width:1.6;stroke-linecap:round}
 .clock .tick.big{stroke:var(--ink);stroke-width:3.6}
 .clock .hr-num{fill:var(--ink);font-family:var(--f-display);font-weight:800;font-size:21px;text-anchor:middle;dominant-baseline:central}
@@ -43,26 +42,26 @@
 </head>
 <body>
 <main class="page">
-  <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a>
+  <div class="topbar"><a class="back" href="../../index.html#back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a></div>
 
   <header class="top">
     <div class="brand">
-      <h1>Baca Jam <span class="tag">masa</span></h1>
-      <p>Tengok jarum jam, kemudian pilih pukul berapa. 10 soalan setiap pusingan.</p>
+      <h1><span data-en="Tell the Time">Baca Jam</span> <span class="tag" data-en="time">masa</span></h1>
+      <p data-en="Look at the clock hands, then choose the time. 10 questions each round.">Tengok jarum jam, kemudian pilih pukul berapa. 10 soalan setiap pusingan.</p>
     </div>
-    <div class="levels" role="group" aria-label="Pilih level">
-      <button type="button" class="lvl" id="lvl-mudah" data-level="mudah">Mudah<small>tepat jam</small></button>
-      <button type="button" class="lvl" id="lvl-sederhana" data-level="sederhana">Sederhana<small>suku, setengah</small></button>
-      <button type="button" class="lvl" id="lvl-sukar" data-level="sukar">Sukar<small>setiap 5 minit</small></button>
+    <div class="levels" role="group" aria-label="Pilih level" data-en-label="Choose level">
+      <button type="button" class="lvl" id="lvl-mudah" data-level="mudah"><span data-en="Easy">Mudah</span><small data-en="o'clock">tepat jam</small></button>
+      <button type="button" class="lvl" id="lvl-sederhana" data-level="sederhana"><span data-en="Medium">Sederhana</span><small data-en="quarter, half">suku, setengah</small></button>
+      <button type="button" class="lvl" id="lvl-sukar" data-level="sukar"><span data-en="Hard">Sukar</span><small data-en="every 5 minutes">setiap 5 minit</small></button>
     </div>
   </header>
 
   <section class="play">
     <div class="board-col">
       <div class="stats">
-        <div class="stat"><span>Soalan</span><b id="st-q">1/10</b></div>
-        <div class="stat"><span>Betul</span><b id="st-ok">0</b></div>
-        <div class="stat"><span>Masa</span><b id="st-time">00:00</b></div>
+        <div class="stat"><span data-en="Question">Soalan</span><b id="st-q">1/10</b></div>
+        <div class="stat"><span data-en="Correct">Betul</span><b id="st-ok">0</b></div>
+        <div class="stat"><span data-en="Time">Masa</span><b id="st-time">00:00</b></div>
       </div>
       <div class="sheet q-sheet">
         <div class="dots" id="dots" role="img"></div>
@@ -80,11 +79,11 @@
         </div>
         <div class="result" id="result" hidden>
           <div class="stars" id="stars" aria-hidden="true"></div>
-          <h2 id="res-title">Tahniah!</h2>
+          <h2 id="res-title"></h2>
           <p id="res-text"></p>
           <div class="review" id="res-list"></div>
           <div class="win-actions">
-            <button type="button" class="act primary" id="again">Main lagi</button>
+            <button type="button" class="act primary" id="again" data-en="Play again">Main lagi</button>
             <button type="button" class="act" id="up" hidden></button>
           </div>
         </div>
@@ -94,21 +93,21 @@
 
     <aside class="side">
       <div id="pad-wrap">
-        <p class="label">Pukul berapa?</p>
+        <p class="label" data-en="What time is it?">Pukul berapa?</p>
         <div class="choices" id="choices"></div>
       </div>
       <button type="button" class="act primary next" id="next" hidden><span>Seterusnya</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>Mula semula</button>
+      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg><span data-en="Restart">Mula semula</span></button>
       <div class="rules">
-        <h2>Cara main</h2>
+        <h2 data-en="How to play">Cara main</h2>
         <ol>
-          <li><b>Jarum pendek</b> tunjuk jam. Kalau jarum pendek di antara dua nombor, ambil nombor yang baru dilepasi.</li>
-          <li><b>Jarum panjang</b> tunjuk minit. Setiap nombor = 5 minit. Nombor 12 = 00, nombor 3 = 15, nombor 6 = 30.</li>
-          <li>Pilih jawapan yang betul daripada empat pilihan.</li>
+          <li data-en="The &lt;b&gt;short hand&lt;/b&gt; shows the hour. If it is between two numbers, use the number it has just passed."><b>Jarum pendek</b> tunjuk jam. Kalau jarum pendek di antara dua nombor, ambil nombor yang baru dilepasi.</li>
+          <li data-en="The &lt;b&gt;long hand&lt;/b&gt; shows the minutes. Each number = 5 minutes. 12 = 00, 3 = 15, 6 = 30."><b>Jarum panjang</b> tunjuk minit. Setiap nombor = 5 minit. Nombor 12 = 00, nombor 3 = 15, nombor 6 = 30.</li>
+          <li data-en="Choose the correct answer from four choices.">Pilih jawapan yang betul daripada empat pilihan.</li>
         </ol>
         <div class="legend">
-          <span class="chip hh"><i></i>Jarum pendek = jam</span>
-          <span class="chip mm"><i></i>Jarum panjang = minit</span>
+          <span class="chip hh"><i></i><span data-en="Short hand = hour">Jarum pendek = jam</span></span>
+          <span class="chip mm"><i></i><span data-en="Long hand = minutes">Jarum panjang = minit</span></span>
         </div>
       </div>
     </aside>
@@ -120,15 +119,14 @@
 <script>
 (() => {
 const $=id=>document.getElementById(id);
-const r=OG.rand;
+const r=OG.rand,L=OG.L;
 const LEVELS={
-  mudah:    {label:'Mudah',ok:m=>m===0},
-  sederhana:{label:'Sederhana',ok:m=>m%15===0},
-  sukar:    {label:'Sukar',ok:m=>m%5===0}
+  mudah:    {label:['Mudah','Easy'],ok:m=>m===0},
+  sederhana:{label:['Sederhana','Medium'],ok:m=>m%15===0},
+  sukar:    {label:['Sukar','Hard'],ok:m=>m%5===0}
 };
 const ORDER=['mudah','sederhana','sukar'];
-let level=OG.get('baca-jam:level','mudah');
-if(!LEVELS[level])level='mudah';
+const lbl=l=>L(LEVELS[l].label[0],LEVELS[l].label[1]);
 
 /* ===== Lukis muka jam ===== */
 const NS='http://www.w3.org/2000/svg';
@@ -154,22 +152,31 @@ function turn(id,target){
   $('hand-'+id).style.transform=`rotate(${deg[id]}deg)`;
 }
 
-/* ===== Masa dalam perkataan ===== */
-const NUM=['','satu','dua','tiga','empat','lima','enam','tujuh','lapan','sembilan','sepuluh','sebelas','dua belas'];
+/* ===== Masa dalam perkataan (BM & English) ===== */
+const MS=['','satu','dua','tiga','empat','lima','enam','tujuh','lapan','sembilan','sepuluh','sebelas','dua belas'];
+const EN=['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
 const nextH=h=>h%12+1;
-function minWords(m){
-  if(m<10)return NUM[m];
+function minMs(m){
+  if(m<10)return MS[m];
   if(m===10)return 'sepuluh';
-  if(m<20)return m===11?'sebelas':NUM[m-10]+' belas';
+  if(m<20)return m===11?'sebelas':MS[m-10]+' belas';
   const t=Math.floor(m/10),o=m%10;
-  return NUM[t]+' puluh'+(o?' '+NUM[o]:'');
+  return MS[t]+' puluh'+(o?' '+MS[o]:'');
 }
+const minEn=m=>({5:'five',10:'ten',20:'twenty',25:'twenty-five'})[m];
 function words(h,m){
-  if(m===0)return `pukul ${NUM[h]}`;
-  if(m===15)return `pukul ${NUM[h]} suku`;
-  if(m===30)return `pukul ${NUM[h]} setengah`;
-  if(m===45)return `pukul ${NUM[nextH(h)]} kurang suku`;
-  return `pukul ${NUM[h]} ${minWords(m)} minit`;
+  if(OG.lang==='en'){
+    if(m===0)return `${EN[h]} o'clock`;
+    if(m===15)return `quarter past ${EN[h]}`;
+    if(m===30)return `half past ${EN[h]}`;
+    if(m===45)return `quarter to ${EN[nextH(h)]}`;
+    return m<30?`${minEn(m)} past ${EN[h]}`:`${minEn(60-m)} to ${EN[nextH(h)]}`;
+  }
+  if(m===0)return `pukul ${MS[h]}`;
+  if(m===15)return `pukul ${MS[h]} suku`;
+  if(m===30)return `pukul ${MS[h]} setengah`;
+  if(m===45)return `pukul ${MS[nextH(h)]} kurang suku`;
+  return `pukul ${MS[h]} ${minMs(m)} minit`;
 }
 const fmt=(h,m)=>`${h}:${String(m).padStart(2,'0')}`;
 const norm=h=>((h-1)%12+12)%12+1;
@@ -182,8 +189,7 @@ function make(lv){
 }
 
 function choicesFor(q){
-  const ok=LEVELS[q.lv].ok,set=new Set([q.answer]);
-  const c=[];
+  const ok=LEVELS[q.lv].ok,set=new Set([q.answer]),c=[];
   const add=(h,m)=>{m=((m%60)+60)%60;if(ok(m))c.push(fmt(norm(h),m));};
   add(q.m===0?12:q.m/5,(q.h%12)*5);          // jarum tertukar
   add(q.h+1,q.m);add(q.h-1,q.m);              // salah jam
@@ -202,7 +208,7 @@ function show(q){
   $('say').hidden=true;
   turn('h',(q.h%12)*30+q.m*.5);
   turn('m',q.m*6);
-  $('clock').setAttribute('aria-label','Jam analog. Jarum pendek dan jarum panjang. Pukul berapa?');
+  $('clock').setAttribute('aria-label',L('Jam analog dengan jarum pendek dan jarum panjang. Pukul berapa?','Analogue clock with a short hand and a long hand. What time is it?'));
   const box=$('choices');box.innerHTML='';
   choicesFor(q).forEach(v=>{
     const b=document.createElement('button');
@@ -226,15 +232,16 @@ function reveal(q,given,ok){
 const quiz=OG.quiz({
   game:'baca-jam',total:10,delay:1400,
   make,show,reveal,
-  prompt:()=>'Tengok jarum jam. Pukul berapa?',
-  praise:q=>`${OG.praise()} Pukul ${q.answer}.`,
-  explain:q=>`Belum betul. Jam ini pukul ${q.answer} (${words(q.h,q.m)}).`,
-  review:(q,given)=>({sum:`${q.answer} · ${words(q.h,q.m)}`,note:`kamu pilih ${given}`}),
-  nextLevel:l=>{const i=ORDER.indexOf(l);return i<ORDER.length-1?{id:ORDER[i+1],label:'level '+LEVELS[ORDER[i+1]].label}:null;},
+  prompt:()=>L('Tengok jarum jam. Pukul berapa?','Look at the clock hands. What time is it?'),
+  praise:q=>`${OG.praise()} ${L('Pukul','It is')} ${q.answer}.`,
+  explain:q=>L(`Belum betul. Jam ini pukul ${q.answer} (${words(q.h,q.m)}).`,`Not quite. This clock shows ${q.answer} (${words(q.h,q.m)}).`),
+  review:(q,given)=>({sum:`${q.answer} · ${words(q.h,q.m)}`,note:L(`kamu pilih ${given}`,`you chose ${given}`)}),
+  nextLevel:l=>{const i=ORDER.indexOf(l);return i<ORDER.length-1?{id:ORDER[i+1],label:L('level ','')+lbl(ORDER[i+1])}:null;},
   onUp:id=>setLevel(id),
   onFinish:()=>{$('pad-wrap').hidden=true;}
 });
 
+let level;
 function setLevel(l){
   level=l;OG.set('baca-jam:level',l);
   ORDER.forEach(x=>$('lvl-'+x).setAttribute('aria-pressed',String(x===l)));
@@ -243,7 +250,12 @@ function setLevel(l){
 }
 document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>setLevel(b.dataset.level)));
 $('restart').addEventListener('click',()=>quiz.start(level));
-setLevel(level);
+OG.onLang(()=>setLevel(level));
+
+/* Umur dari menu: ≤7 Mudah, 8 Sederhana, 9+ Sukar */
+const fromAge=OG.levelForAge(OG.ageParam(),7,8);
+const saved=fromAge||OG.get('baca-jam:level','mudah');
+setLevel(LEVELS[saved]?saved:'mudah');
 })();
 </script>
 </body>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Game mengira untuk budak tadika: kira bentuk dalam gambar. Counting game for preschoolers. Dwibahasa / bilingual.">
+<meta name="theme-color" content="#F3F7FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161C26" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<title data-en="Count Objects · Main Nombor">Kira Objek · Main Nombor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Lexend:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../assets/common.css">
+<style>
+.ask{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 12px;font-family:var(--f-display);font-weight:800;font-size:clamp(24px,6vw,32px);line-height:1.1;text-align:center}
+.ask svg{width:1.3em;height:1.3em;flex:none}
+.tray{display:grid;gap:4px;padding:10px;background:var(--box);border:2px dashed var(--thin);border-radius:16px}
+.spot{position:relative;aspect-ratio:1;display:grid;place-items:center}
+.obj{position:relative;width:86%;height:86%;display:grid;place-items:center}
+.obj svg{width:100%;height:100%;overflow:visible}
+.obj .n{position:absolute;top:-6%;right:-8%;min-width:1.6em;height:1.6em;padding:0 .3em;border-radius:999px;background:var(--ink);color:var(--paper);font:800 clamp(11px,2.6vw,15px)/1.6em var(--f-display);text-align:center;animation:pop .3s ease-out both}
+.obj.dim{opacity:.35}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.choices.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.choices .num{font-size:50px;padding:18px 0 15px}
+.restart{width:100%}
+.tip{margin:12px 0 0;font-size:13px;color:var(--muted)}
+/* warna bentuk */
+.s-star{fill:var(--tag-bg)} .s-ball{fill:var(--pen)} .s-heart{fill:var(--bad)} .s-tri{fill:var(--ok)} .s-sq{fill:var(--sel)}
+.shape{stroke:var(--edge);stroke-width:2.2;stroke-linejoin:round}
+@media (max-width:780px){.play{gap:18px}}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="topbar"><a class="back" href="../../index.html#back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a></div>
+
+  <header class="top">
+    <div class="brand">
+      <h1><span data-en="Count Objects">Kira Objek</span> <span class="tag">1, 2, 3</span></h1>
+      <p data-en="Count the shapes in the picture, then tap the right number.">Kira bentuk dalam gambar, kemudian tekan nombor yang betul.</p>
+    </div>
+    <div class="levels" role="group" aria-label="Pilih level" data-en-label="Choose level">
+      <button type="button" class="lvl" id="lvl-mudah" data-level="mudah"><span data-en="Easy">Mudah</span><span class="pips"><i class="on"></i><i></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sederhana" data-level="sederhana"><span data-en="Medium">Sederhana</span><span class="pips"><i class="on"></i><i class="on"></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sukar" data-level="sukar"><span data-en="Hard">Sukar</span><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span></button>
+    </div>
+  </header>
+
+  <section class="play">
+    <div class="board-col">
+      <div class="stats">
+        <div class="stat"><span data-en="Question">Soalan</span><b id="st-q">1/8</b></div>
+        <div class="stat"><span data-en="Correct">Betul</span><b id="st-ok">0</b></div>
+        <div class="stat"><span data-en="Time">Masa</span><b id="st-time">00:00</b></div>
+      </div>
+      <div class="sheet q-sheet">
+        <div class="dots" id="dots" role="img"></div>
+        <div id="q-area">
+          <div class="ask" id="ask"></div>
+          <div class="tray" id="tray" role="img"></div>
+        </div>
+        <div class="result" id="result" hidden>
+          <div class="stars" id="stars" aria-hidden="true"></div>
+          <h2 id="res-title"></h2>
+          <p id="res-text"></p>
+          <div class="review" id="res-list"></div>
+          <div class="win-actions">
+            <button type="button" class="act primary" id="again" data-en="Play again">Main lagi</button>
+            <button type="button" class="act" id="up" hidden></button>
+          </div>
+        </div>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <aside class="side">
+      <div id="pad-wrap">
+        <p class="label" data-en="How many?">Berapa?</p>
+        <div class="choices" id="choices"></div>
+      </div>
+      <button type="button" class="act primary next" id="next" hidden><span>Seterusnya</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg><span data-en="Restart">Mula semula</span></button>
+      <div class="rules">
+        <h2 data-en="How to play">Cara main</h2>
+        <ol>
+          <li data-en="Count the shapes one by one. Touch each shape with your finger as you count.">Kira bentuk satu-satu. Sentuh setiap bentuk dengan jari semasa mengira.</li>
+          <li data-en="Tap the number you counted.">Tekan nombor yang kamu kira.</li>
+          <li data-en="Hard level: there are other shapes too. Count only the shape that is asked.">Level Sukar: ada bentuk lain juga. Kira bentuk yang ditanya sahaja.</li>
+        </ol>
+        <p class="tip" data-en="For parents: count out loud together with your child.">Untuk ibu bapa: kira kuat-kuat bersama anak.</p>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script src="../../assets/common.js"></script>
+<script src="../../assets/quiz.js"></script>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const r=OG.rand,L=OG.L;
+
+/* Level: julat bilangan + saiz dulang + ada bentuk pengacau atau tidak */
+const LEVELS={
+  mudah:    {label:['Mudah','Easy'],min:1,max:5,cols:4,rows:2,mix:false,choices:3},
+  sederhana:{label:['Sederhana','Medium'],min:3,max:10,cols:5,rows:3,mix:false,choices:4},
+  sukar:    {label:['Sukar','Hard'],min:3,max:10,cols:6,rows:4,mix:true,choices:4}
+};
+const ORDER=['mudah','sederhana','sukar'];
+const lbl=l=>L(LEVELS[l].label[0],LEVELS[l].label[1]);
+
+/* Bentuk (SVG 40×40) + nama [BM, English] */
+const SHAPES={
+  star:{name:['bintang','stars'],svg:'<path class="shape s-star" d="M20 3l4.9 10.4 11.3 1.4-8.3 7.8 2.2 11.2L20 28.2l-10.1 5.6 2.2-11.2-8.3-7.8 11.3-1.4z"/>'},
+  ball:{name:['bola','balls'],svg:'<circle class="shape s-ball" cx="20" cy="20" r="15"/><path d="M9 14c6 4 16 4 22 0" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.4" stroke-linecap="round"/>'},
+  heart:{name:['hati','hearts'],svg:'<path class="shape s-heart" d="M20 34S5 25 5 14.5C5 9.3 9 6 13.2 6c3 0 5.4 1.7 6.8 4.2C21.4 7.7 23.8 6 26.8 6 31 6 35 9.3 35 14.5 35 25 20 34 20 34z"/>'},
+  tri:{name:['segi tiga','triangles'],svg:'<path class="shape s-tri" d="M20 5l16 29H4z"/>'},
+  sq:{name:['kotak','squares'],svg:'<rect class="shape s-sq" x="6" y="6" width="28" height="28" rx="5"/>'}
+};
+const KINDS=Object.keys(SHAPES);
+const nameOf=k=>L(SHAPES[k].name[0],SHAPES[k].name[1]);
+const svgOf=k=>`<svg viewBox="0 0 40 40" aria-hidden="true">${SHAPES[k].svg}</svg>`;
+let level;
+
+function make(lv){
+  const c=LEVELS[lv],kind=OG.pick(KINDS),n=r(c.min,c.max),cells=c.cols*c.rows;
+  const items=Array(n).fill(kind);
+  if(c.mix){
+    const others=KINDS.filter(k=>k!==kind),extra=Math.min(cells-n,r(3,7));
+    for(let i=0;i<extra;i++)items.push(OG.pick(others));
+  }
+  const spots=OG.shuffle([...Array(cells).keys()]).slice(0,items.length);
+  const layout=Array(cells).fill(null);
+  OG.shuffle(items).forEach((k,i)=>{layout[spots[i]]={k,rot:r(-18,18),sc:.86+Math.random()*.2,dx:r(-6,6),dy:r(-6,6)};});
+  return {key:kind+n+spots.join(','),kind,answer:n,layout,lv};
+}
+
+function choicesFor(q){
+  const c=LEVELS[q.lv],set=new Set([q.answer]);
+  for(const v of OG.shuffle([q.answer+1,q.answer-1,q.answer+2,q.answer-2,q.answer+3])){
+    if(set.size>=c.choices)break;
+    if(v>=1&&v<=c.max+2)set.add(v);
+  }
+  while(set.size<c.choices)set.add(r(1,c.max+2));
+  return [...set].sort((a,b)=>a-b);
+}
+
+function show(q){
+  const c=LEVELS[q.lv];
+  $('pad-wrap').hidden=false;
+  $('ask').innerHTML=`${svgOf(q.kind)}<span>${L(`Berapa ${nameOf(q.kind)}?`,`How many ${nameOf(q.kind)}?`)}</span>`;
+  const tray=$('tray');
+  tray.style.gridTemplateColumns=`repeat(${c.cols},minmax(0,1fr))`;
+  tray.innerHTML=q.layout.map(o=>o?`<div class="spot"><span class="obj" data-k="${o.k}" style="transform:translate(${o.dx}%,${o.dy}%) rotate(${o.rot}deg) scale(${o.sc.toFixed(2)})">${svgOf(o.k)}</span></div>`:'<div class="spot"></div>').join('');
+  tray.setAttribute('aria-label',L(`Gambar dengan beberapa bentuk. Berapa ${nameOf(q.kind)}?`,`A picture with some shapes. How many ${nameOf(q.kind)}?`));
+  const box=$('choices');
+  box.className='choices'+(c.choices===3?' three':'');
+  box.innerHTML='';
+  choicesFor(q).forEach(v=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='num';b.textContent=v;b.dataset.v=v;
+    b.addEventListener('click',()=>quiz.submit(v));
+    box.appendChild(b);
+  });
+}
+
+function reveal(q,given,ok){
+  $('choices').querySelectorAll('.num').forEach(b=>{
+    const v=+b.dataset.v;b.disabled=true;
+    if(v===q.answer)b.classList.add('ok');else if(v===given)b.classList.add('bad');
+  });
+  /* Nombor setiap bentuk yang betul, satu-satu — bantu budak tengok cara mengira */
+  let k=0;
+  $('tray').querySelectorAll('.obj').forEach(o=>{
+    if(o.dataset.k!==q.kind){o.classList.add('dim');return;}
+    k++;
+    const n=document.createElement('span');
+    n.className='n';n.textContent=k;n.style.animationDelay=(OG.reduce?0:k*90)+'ms';
+    o.appendChild(n);
+  });
+}
+
+const quiz=OG.quiz({
+  game:'kira-objek',total:8,delay:1600,
+  make,show,reveal,
+  prompt:()=>L('Kira satu-satu.','Count them one by one.'),
+  praise:q=>`${OG.praise()} ${q.answer} ${nameOf(q.kind)}.`,
+  explain:q=>L(`Belum betul. Ada ${q.answer} ${nameOf(q.kind)}. Tengok nombor pada setiap bentuk.`,`Not quite. There are ${q.answer} ${nameOf(q.kind)}. Look at the number on each shape.`),
+  review:(q,given)=>({sum:`${q.answer} ${nameOf(q.kind)}`,note:L(`kamu pilih ${given}`,`you chose ${given}`)}),
+  nextLevel:l=>{const i=ORDER.indexOf(l);return i<ORDER.length-1?{id:ORDER[i+1],label:L('level ','')+lbl(ORDER[i+1])}:null;},
+  onUp:id=>setLevel(id),
+  onFinish:()=>{$('pad-wrap').hidden=true;}
+});
+
+function setLevel(l){
+  level=l;OG.set('kira-objek:level',l);
+  ORDER.forEach(x=>$('lvl-'+x).setAttribute('aria-pressed',String(x===l)));
+  quiz.start(l);
+}
+document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>setLevel(b.dataset.level)));
+$('restart').addEventListener('click',()=>quiz.start(level));
+OG.onLang(()=>setLevel(level));
+
+/* Umur dari menu: ≤4 Mudah, 5 Sederhana, 6+ Sukar */
+const fromAge=OG.levelForAge(OG.ageParam(),4,5);
+const saved=fromAge||OG.get('kira-objek:level','mudah');
+setLevel(LEVELS[saved]?saved:'mudah');
+})();
+</script>
+</body>
+</html>

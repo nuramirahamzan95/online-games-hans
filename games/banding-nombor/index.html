@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Bandingkan dua nombor. Pilih tanda lebih besar, lebih kecil atau sama.">
+<meta name="description" content="Bandingkan dua nombor dengan tanda lebih, kurang atau sama. Compare two numbers with greater than, less than or equal. Dwibahasa / bilingual.">
 <meta name="theme-color" content="#F3F7FC" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#161C26" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
-<title>Banding Nombor · Main Nombor</title>
+<title data-en="Compare Numbers · Main Nombor">Banding Nombor · Main Nombor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Lexend:wght@400;500;600&display=swap">
@@ -24,7 +24,7 @@
 .mid.bad{border:3px solid var(--bad);background:var(--bad-bg);color:var(--bad-ink)}
 .frame{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;width:min(100%,120px);padding:5px;border:2px solid var(--thin);border-radius:9px;background:var(--box)}
 .frame i{aspect-ratio:1;border-radius:50%}
-.frame i:not(.on):not(.gone){box-shadow:inset 0 0 0 1.5px var(--thin)}
+.frame i:not(.on){box-shadow:inset 0 0 0 1.5px var(--thin)}
 .frame i.on{background:var(--pen)}
 .fix{display:flex;justify-content:center;margin:0 0 6px;text-align:center}
 .fix span{font-weight:600;background:var(--ok-bg);color:var(--ok-ink);border:2px solid var(--ok);border-radius:999px;padding:4px 14px}
@@ -38,26 +38,26 @@
 </head>
 <body>
 <main class="page">
-  <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a>
+  <div class="topbar"><a class="back" href="../../index.html#back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a></div>
 
   <header class="top">
     <div class="brand">
-      <h1>Banding Nombor <span class="tag">&lt; = &gt;</span></h1>
-      <p>Mana lebih besar? Pilih tanda yang betul untuk 10 soalan.</p>
+      <h1><span data-en="Compare Numbers">Banding Nombor</span> <span class="tag">&lt; = &gt;</span></h1>
+      <p data-en="Which is bigger? Choose the correct sign for 10 questions.">Mana lebih besar? Pilih tanda yang betul untuk 10 soalan.</p>
     </div>
-    <div class="levels" role="group" aria-label="Pilih level">
-      <button type="button" class="lvl" id="lvl-mudah" data-level="mudah">Mudah<span class="pips"><i class="on"></i><i></i><i></i></span></button>
-      <button type="button" class="lvl" id="lvl-sederhana" data-level="sederhana">Sederhana<span class="pips"><i class="on"></i><i class="on"></i><i></i></span></button>
-      <button type="button" class="lvl" id="lvl-sukar" data-level="sukar">Sukar<span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span></button>
+    <div class="levels" role="group" aria-label="Pilih level" data-en-label="Choose level">
+      <button type="button" class="lvl" id="lvl-mudah" data-level="mudah"><span data-en="Easy">Mudah</span><span class="pips"><i class="on"></i><i></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sederhana" data-level="sederhana"><span data-en="Medium">Sederhana</span><span class="pips"><i class="on"></i><i class="on"></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sukar" data-level="sukar"><span data-en="Hard">Sukar</span><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span></button>
     </div>
   </header>
 
   <section class="play">
     <div class="board-col">
       <div class="stats">
-        <div class="stat"><span>Soalan</span><b id="st-q">1/10</b></div>
-        <div class="stat"><span>Betul</span><b id="st-ok">0</b></div>
-        <div class="stat"><span>Masa</span><b id="st-time">00:00</b></div>
+        <div class="stat"><span data-en="Question">Soalan</span><b id="st-q">1/10</b></div>
+        <div class="stat"><span data-en="Correct">Betul</span><b id="st-ok">0</b></div>
+        <div class="stat"><span data-en="Time">Masa</span><b id="st-time">00:00</b></div>
       </div>
       <div class="sheet q-sheet">
         <div class="dots" id="dots" role="img"></div>
@@ -67,11 +67,11 @@
         </div>
         <div class="result" id="result" hidden>
           <div class="stars" id="stars" aria-hidden="true"></div>
-          <h2 id="res-title">Tahniah!</h2>
+          <h2 id="res-title"></h2>
           <p id="res-text"></p>
           <div class="review" id="res-list"></div>
           <div class="win-actions">
-            <button type="button" class="act primary" id="again">Main lagi</button>
+            <button type="button" class="act primary" id="again" data-en="Play again">Main lagi</button>
             <button type="button" class="act" id="up" hidden></button>
           </div>
         </div>
@@ -81,24 +81,24 @@
 
     <aside class="side">
       <div id="pad-wrap">
-        <p class="label">Pilih tanda</p>
+        <p class="label" data-en="Choose a sign">Pilih tanda</p>
         <div class="signs" id="signs">
-          <button type="button" class="num" data-v="&lt;" aria-label="Kurang daripada">&lt;<small>kurang</small></button>
-          <button type="button" class="num" data-v="=" aria-label="Sama dengan">=<small>sama</small></button>
-          <button type="button" class="num" data-v="&gt;" aria-label="Lebih daripada">&gt;<small>lebih</small></button>
+          <button type="button" class="num" data-v="&lt;" aria-label="Kurang daripada" data-en-label="Less than">&lt;<small data-en="less">kurang</small></button>
+          <button type="button" class="num" data-v="=" aria-label="Sama dengan" data-en-label="Equal to">=<small data-en="equal">sama</small></button>
+          <button type="button" class="num" data-v="&gt;" aria-label="Lebih daripada" data-en-label="Greater than">&gt;<small data-en="more">lebih</small></button>
         </div>
       </div>
       <button type="button" class="act primary next" id="next" hidden><span>Seterusnya</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>Mula semula</button>
+      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg><span data-en="Restart">Mula semula</span></button>
       <div class="rules">
-        <h2>Cara main</h2>
+        <h2 data-en="How to play">Cara main</h2>
         <ol>
-          <li>Bandingkan nombor kiri dengan nombor kanan.</li>
-          <li><b>&gt;</b> bermaksud kiri lebih besar. <b>&lt;</b> bermaksud kiri lebih kecil. <b>=</b> bermaksud sama.</li>
-          <li>Petua: tanda macam mulut buaya. Mulut yang terbuka sentiasa menghadap nombor yang lebih besar.</li>
-          <li>Level Sukar: kira dulu, kemudian banding.</li>
+          <li data-en="Compare the number on the left with the number on the right.">Bandingkan nombor kiri dengan nombor kanan.</li>
+          <li data-en="&lt;b&gt;&amp;gt;&lt;/b&gt; means the left is bigger. &lt;b&gt;&amp;lt;&lt;/b&gt; means the left is smaller. &lt;b&gt;=&lt;/b&gt; means they are the same."><b>&gt;</b> bermaksud kiri lebih besar. <b>&lt;</b> bermaksud kiri lebih kecil. <b>=</b> bermaksud sama.</li>
+          <li data-en="Tip: the sign is like a crocodile's mouth. The open mouth always faces the bigger number.">Petua: tanda macam mulut buaya. Mulut yang terbuka sentiasa menghadap nombor yang lebih besar.</li>
+          <li data-en="Hard level: work out the sum first, then compare.">Level Sukar: kira dulu, kemudian banding.</li>
         </ol>
-        <p class="kbd-tip">Papan kekunci: <kbd>&lt;</kbd> atau <kbd>←</kbd>, <kbd>=</kbd>, <kbd>&gt;</kbd> atau <kbd>→</kbd>. <kbd>Enter</kbd> untuk seterusnya.</p>
+        <p class="kbd-tip" data-en="Keyboard: &lt;kbd&gt;&amp;lt;&lt;/kbd&gt; or &lt;kbd&gt;←&lt;/kbd&gt;, &lt;kbd&gt;=&lt;/kbd&gt;, &lt;kbd&gt;&amp;gt;&lt;/kbd&gt; or &lt;kbd&gt;→&lt;/kbd&gt;. &lt;kbd&gt;Enter&lt;/kbd&gt; for next.">Papan kekunci: <kbd>&lt;</kbd> atau <kbd>←</kbd>, <kbd>=</kbd>, <kbd>&gt;</kbd> atau <kbd>→</kbd>. <kbd>Enter</kbd> untuk seterusnya.</p>
       </div>
     </aside>
   </section>
@@ -109,16 +109,17 @@
 <script>
 (() => {
 const $=id=>document.getElementById(id);
-const r=OG.rand;
+const r=OG.rand,L=OG.L;
 const LEVELS={
-  mudah:{label:'Mudah'},      // 1–10 dengan titik
-  sederhana:{label:'Sederhana'}, // 1–20
-  sukar:{label:'Sukar'}       // ayat tambah/tolak lawan nombor
+  mudah:{label:['Mudah','Easy']},          // 1–10 dengan titik
+  sederhana:{label:['Sederhana','Medium']},// 1–20
+  sukar:{label:['Sukar','Hard']}           // ayat tambah/tolak lawan nombor
 };
 const ORDER=['mudah','sederhana','sukar'];
-const WORD={'<':'kurang daripada','>':'lebih daripada','=':'sama dengan'};
-let level=OG.get('banding-nombor:level','mudah');
-if(!LEVELS[level])level='mudah';
+const lbl=l=>L(LEVELS[l].label[0],LEVELS[l].label[1]);
+const WORD={'<':['kurang daripada','is less than'],'>':['lebih daripada','is greater than'],'=':['sama dengan','is equal to']};
+const word=s=>L(WORD[s][0],WORD[s][1]);
+let level;
 
 const sign=(x,y)=>x<y?'<':x>y?'>':'=';
 
@@ -130,15 +131,14 @@ function make(lv){
     if(!eq&&b===a)b=a===max?a-1:a+1;
     return {key:`${a}|${b}`,L:{v:a,t:String(a)},R:{v:b,t:String(b)},answer:sign(a,b),dots:lv==='mudah'};
   }
-  // Sukar: satu sisi ialah ayat matematik (hingga 20)
   let x,y,op,v;
   if(Math.random()<.6){v=r(3,20);x=r(1,v-1);y=v-x;op='+';}
   else{x=r(3,20);y=r(1,x-1);v=x-y;op='−';}
   const n=eq?v:Math.max(0,v+OG.pick([-3,-2,-1,1,2,3]));
   const expr={v,t:`${x} <span class="op">${op}</span> ${y}`,plain:`${x} ${op} ${y}`,expr:true};
   const num={v:n,t:String(n)};
-  const [L,R]=Math.random()<.5?[expr,num]:[num,expr];
-  return {key:`${L.plain||L.t}|${R.plain||R.t}`,L,R,answer:sign(L.v,R.v),dots:false};
+  const [A,B]=Math.random()<.5?[expr,num]:[num,expr];
+  return {key:`${A.plain||A.t}|${B.plain||B.t}`,L:A,R:B,answer:sign(A.v,B.v),dots:false};
 }
 
 function frame(n){
@@ -152,7 +152,7 @@ function show(q){
   $('pad-wrap').hidden=false;$('fix').hidden=true;
   const side=s=>`<div class="side-n"><div class="tile${s.expr?' expr':''}"><span>${s.t}</span></div>${q.dots?frame(s.v):''}</div>`;
   $('cmp').innerHTML=side(q.L)+'<div class="mid" id="mid">?</div>'+side(q.R);
-  $('cmp').setAttribute('aria-label',`${plain(q.L)} berbanding ${plain(q.R)}`);
+  $('cmp').setAttribute('aria-label',L(`${plain(q.L)} berbanding ${plain(q.R)}`,`${plain(q.L)} compared with ${plain(q.R)}`));
   $('signs').querySelectorAll('.num').forEach(b=>{b.disabled=false;b.classList.remove('ok','bad');});
 }
 
@@ -164,22 +164,21 @@ function reveal(q,given,ok){
     b.disabled=true;
     if(b.dataset.v===q.answer)b.classList.add('ok');else if(b.dataset.v===given)b.classList.add('bad');
   });
-  if(!ok){$('fix').hidden=false;$('fix').querySelector('span').textContent=`Jawapan betul: ${plain(q.L)} ${q.answer} ${plain(q.R)}`;}
+  if(!ok){$('fix').hidden=false;$('fix').querySelector('span').textContent=`${L('Jawapan betul','Correct answer')}: ${plain(q.L)} ${q.answer} ${plain(q.R)}`;}
 }
 
 function explain(q){
-  const L=q.L,R=q.R;
-  const calc=[L,R].filter(s=>s.expr).map(s=>`${s.plain} = ${s.v}. `).join('');
-  return `Belum betul. ${calc}${L.v} ${WORD[q.answer]} ${R.v}.`;
+  const calc=[q.L,q.R].filter(s=>s.expr).map(s=>`${s.plain} = ${s.v}. `).join('');
+  return `${L('Belum betul.','Not quite.')} ${calc}${q.L.v} ${word(q.answer)} ${q.R.v}.`;
 }
 
 const quiz=OG.quiz({
   game:'banding-nombor',total:10,
   make,show,reveal,explain,
-  prompt:q=>q.L.expr||q.R.expr?'Kira dulu, kemudian banding.':'Mana lebih besar?',
-  praise:q=>`${OG.praise()} ${plain(q.L)} ${WORD[q.answer]} ${plain(q.R)}.`,
-  review:(q,given)=>({sum:`${plain(q.L)} ${q.answer} ${plain(q.R)}`,note:`kamu pilih ${given}`}),
-  nextLevel:l=>{const i=ORDER.indexOf(l);return i<ORDER.length-1?{id:ORDER[i+1],label:'level '+LEVELS[ORDER[i+1]].label}:null;},
+  prompt:q=>q.L.expr||q.R.expr?L('Kira dulu, kemudian banding.','Work it out first, then compare.'):L('Mana lebih besar?','Which is bigger?'),
+  praise:q=>`${OG.praise()} ${plain(q.L)} ${word(q.answer)} ${plain(q.R)}.`,
+  review:(q,given)=>({sum:`${plain(q.L)} ${q.answer} ${plain(q.R)}`,note:L(`kamu pilih ${given}`,`you chose ${given}`)}),
+  nextLevel:l=>{const i=ORDER.indexOf(l);return i<ORDER.length-1?{id:ORDER[i+1],label:L('level ','')+lbl(ORDER[i+1])}:null;},
   onUp:id=>setLevel(id),
   onFinish:()=>{$('pad-wrap').hidden=true;}
 });
@@ -193,6 +192,7 @@ function setLevel(l){
 }
 document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>setLevel(b.dataset.level)));
 $('restart').addEventListener('click',()=>quiz.start(level));
+OG.onLang(()=>setLevel(level));
 
 document.addEventListener('keydown',e=>{
   if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey)return;
@@ -200,7 +200,10 @@ document.addEventListener('keydown',e=>{
   if(map[e.key]){e.preventDefault();quiz.submit(map[e.key]);}
 });
 
-setLevel(level);
+/* Umur dari menu: ≤5 Mudah, 6 Sederhana, 7+ Sukar */
+const fromAge=OG.levelForAge(OG.ageParam(),5,6);
+const saved=fromAge||OG.get('banding-nombor:level','mudah');
+setLevel(LEVELS[saved]?saved:'mudah');
 })();
 </script>
 </body>

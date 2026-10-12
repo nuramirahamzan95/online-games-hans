@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Soalan matematik sekolah menengah, Tingkatan 1 hingga 5 (umur 13 hingga 17). Secondary school maths questions, Form 1 to 5. Dwibahasa / bilingual.">
+<meta name="theme-color" content="#F3F7FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161C26" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<title data-en="Secondary Math · Main Nombor">Math Menengah · Main Nombor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Lexend:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../assets/common.css">
+<style>
+.ages .lvl{flex:1;min-width:58px;padding:8px 6px 7px;gap:3px}
+.ages .lvl b{font-family:var(--f-display);font-size:22px;font-weight:800;line-height:1}
+.ages .lvl span{font-size:10px;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+.info{display:flex;flex-wrap:wrap;gap:6px 8px;margin:-4px 0 0;padding:0;list-style:none}
+.info li{font-size:13px;font-weight:500;background:var(--card);border:2px solid var(--thin);border-radius:999px;padding:2px 11px}
+.info li:first-child{background:var(--tag-bg);border-color:var(--edge);color:var(--tag-ink);font-weight:600}
+
+.q-sheet{container-type:inline-size}
+.qbody{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 4px 10px;text-align:center}
+.topic{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--pen);background:var(--same);border-radius:999px;padding:3px 12px}
+.ctx{margin:0;font-size:16px;color:var(--ink);max-width:34ch;text-wrap:balance}
+.expr{font-family:var(--f-display);font-weight:800;line-height:1.15;font-size:clamp(22px,6.6cqi,32px);text-wrap:balance;font-variant-numeric:tabular-nums}
+.expr.lg{font-size:clamp(28px,9cqi,44px)}
+.expr.xl{font-size:clamp(36px,13cqi,62px)}
+.expr sup,.ansline sup{font-size:.55em;line-height:0}
+.expr sub,.ansline sub{font-size:.5em;line-height:0}
+.mat{display:inline-grid;grid-template-columns:repeat(2,auto);gap:.02em .7em;padding:.06em .4em;margin-left:.15em;border-left:.09em solid currentColor;border-right:.09em solid currentColor;border-radius:.28em;vertical-align:middle;font-size:.85em;line-height:1.15}
+.mat i{font-style:normal;text-align:right}
+.ansline{display:flex;align-items:center;justify-content:center;gap:.25em;font-family:var(--f-display);font-weight:800;font-size:clamp(26px,8.4cqi,40px);line-height:1;margin-top:6px;white-space:nowrap}
+.ansline .ask{color:var(--pen)}
+.slot{min-width:2.2em;padding:.14em .3em .08em;border:3px dashed var(--sel);border-radius:.24em;background:var(--hl-soft);text-align:center;color:var(--muted);font-variant-numeric:tabular-nums}
+.slot.filled{color:var(--ink);border-style:solid}
+.slot.ok{background:var(--ok-bg);border:3px solid var(--ok);color:var(--ok-ink)}
+.slot.bad{background:var(--bad-bg);border:3px solid var(--bad);color:var(--bad-ink);text-decoration:line-through;text-decoration-thickness:.07em}
+.fix{display:flex;justify-content:center;margin:4px 0 0}
+.fix span{font-weight:600;background:var(--ok-bg);color:var(--ok-ink);border:2px solid var(--ok);border-radius:999px;padding:4px 14px}
+.steps{margin:12px 2px 2px;padding:10px 14px;background:var(--box);border-left:4px solid var(--pen);border-radius:10px;font-size:15px;line-height:1.55;text-align:left}
+.steps b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+
+.keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.keypad .num{font-size:30px;padding:11px 0 9px}
+.keypad .num svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.keypad .neg.on{background:var(--hl);border-color:var(--sel)}
+.keypad .go-btn{grid-column:1/-1;flex-direction:row;justify-content:center;gap:10px;font-family:var(--f-body);font-size:18px;font-weight:600;background:var(--pen);color:var(--pen-ink);padding:14px 0}
+.keypad .go-btn svg{width:22px;height:22px}
+.restart{width:100%}
+.syl{margin:12px 0 0;font-size:13px;color:var(--muted)}
+@media (max-width:780px){.play{gap:18px}.brand p{font-size:14px}}
+@media (max-width:560px){.ages .lvl{min-width:0}}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="topbar"><a class="back" href="../../index.html#back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a></div>
+
+  <header class="top">
+    <div class="brand">
+      <h1><span data-en="Secondary Math">Math Menengah</span> <span class="tag" data-en="F1–F5">T1–T5</span></h1>
+      <p data-en="10 questions on secondary school topics. Choose an age or form, then type your answers.">10 soalan ikut topik sekolah menengah. Pilih umur atau tingkatan, kemudian taip jawapan.</p>
+    </div>
+    <div class="levels ages" id="ages" role="group" aria-label="Pilih umur" data-en-label="Choose age"></div>
+  </header>
+  <ul class="info" id="info" aria-live="polite"></ul>
+
+  <section class="play">
+    <div class="board-col">
+      <div class="stats">
+        <div class="stat"><span data-en="Question">Soalan</span><b id="st-q">1/10</b></div>
+        <div class="stat"><span data-en="Correct">Betul</span><b id="st-ok">0</b></div>
+        <div class="stat"><span data-en="Time">Masa</span><b id="st-time">00:00</b></div>
+      </div>
+      <div class="sheet q-sheet">
+        <div class="dots" id="dots" role="img"></div>
+        <div id="q-area">
+          <div class="qbody">
+            <span class="topic" id="topic"></span>
+            <p class="ctx" id="ctx"></p>
+            <div class="expr" id="expr"></div>
+            <div class="ansline" id="ansline"></div>
+          </div>
+          <div class="fix" id="fix" hidden><span></span></div>
+          <div class="steps" id="steps" hidden></div>
+        </div>
+        <div class="result" id="result" hidden>
+          <div class="stars" id="stars" aria-hidden="true"></div>
+          <h2 id="res-title"></h2>
+          <p id="res-text"></p>
+          <div class="review" id="res-list"></div>
+          <div class="win-actions">
+            <button type="button" class="act primary" id="again" data-en="Play again">Main lagi</button>
+            <button type="button" class="act" id="up" hidden></button>
+          </div>
+        </div>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <aside class="side">
+      <div id="pad-wrap">
+        <p class="label" data-en="Type the answer">Taip jawapan</p>
+        <div class="keypad" id="keypad"></div>
+      </div>
+      <button type="button" class="act primary next" id="next" hidden><span>Seterusnya</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg><span data-en="Restart">Mula semula</span></button>
+      <div class="rules">
+        <h2 data-en="How to play">Cara main</h2>
+        <ol>
+          <li data-en="Choose an age or form. The topics follow that form.">Pilih umur atau tingkatan. Topik soalan ikut tingkatan itu.</li>
+          <li data-en="Type your answer on the number pad. Press &lt;b&gt;±&lt;/b&gt; for a negative answer.">Taip jawapan guna papan nombor. Tekan <b>±</b> untuk jawapan negatif.</li>
+          <li data-en="If you get it wrong, read the &lt;b&gt;Working&lt;/b&gt; box to see the steps.">Kalau salah, baca <b>Cara kira</b> untuk tengok langkah penyelesaian.</li>
+        </ol>
+        <p class="syl" data-en="Topics are based on the KSSM Mathematics syllabus. Ages 16–17 include some Additional Mathematics (logarithms, progressions), marked *. All answers are whole numbers.">Topik berdasarkan silibus Matematik KSSM. Umur 16–17 ada sedikit topik Matematik Tambahan (logaritma, janjang), bertanda *. Semua jawapan nombor bulat.</p>
+        <p class="kbd-tip" data-en="Keyboard: &lt;kbd&gt;0&lt;/kbd&gt;–&lt;kbd&gt;9&lt;/kbd&gt; type, &lt;kbd&gt;-&lt;/kbd&gt; negative, &lt;kbd&gt;Backspace&lt;/kbd&gt; delete, &lt;kbd&gt;Enter&lt;/kbd&gt; submit / next.">Papan kekunci: <kbd>0</kbd>–<kbd>9</kbd> taip, <kbd>-</kbd> negatif, <kbd>Backspace</kbd> padam, <kbd>Enter</kbd> hantar / seterusnya.</p>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script src="../../assets/common.js"></script>
+<script src="../../assets/quiz.js"></script>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const r=OG.rand,pick=OG.pick,L=OG.L;
+
+/* ===== Helper format nombor ===== */
+const nz=(lo,hi)=>{let v;do{v=r(lo,hi);}while(v===0);return v;};
+const N=n=>n<0?'−'+(-n):String(n);
+const P=n=>n<0?'('+N(n)+')':N(n);
+const big=n=>(n<0?'−':'')+Math.abs(n).toLocaleString('en-US');
+const sgn=n=>n<0?` − ${-n}`:` + ${n}`;
+const co=(a,v)=>a===1?v:a===-1?'−'+v:N(a)+v;
+const term=(a,v)=>a<0?` − ${co(-a,v)}`:` + ${co(a,v)}`;
+const sup=n=>`<sup>${N(n)}</sup>`;
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+const supU=n=>String(n).split('').map(d=>SUP[d]).join('');
+const fac=v=>v===0?'x':`(x${sgn(-v)})`;
+
+/* ===== Jenis soalan. Setiap satu pulangkan:
+   {topic, ctx?, expr, ask?, pre?, post?, answer (integer), why (langkah kira)}
+   Teks dijana ikut bahasa semasa (OG.L). ===== */
+const T={
+  /* --- Tingkatan 1 --- */
+  integer(){
+    const op=pick(['+','−','×','÷']);let a,b,c;
+    if(op==='+'){a=nz(-20,20);b=nz(-20,20);c=a+b;}
+    else if(op==='−'){a=nz(-20,20);b=nz(-20,20);c=a-b;}
+    else if(op==='×'){a=nz(-12,12);b=nz(-9,9);if(a>0&&b>0)a=-a;c=a*b;}
+    else{b=nz(-9,9);if(Math.abs(b)===1)b*=2;c=nz(-12,12);a=b*c;if(a>0&&b>0){a=-a;c=-c;}}
+    const expr=`${N(a)} ${op} ${P(b)}`;
+    const rule=op==='×'||op==='÷'?L(' Tanda sama → positif, tanda berbeza → negatif.',' Same signs → positive, different signs → negative.')
+      :op==='−'&&b<0?L(` Tolak nombor negatif sama dengan tambah: ${N(a)} + ${-b}.`,` Subtracting a negative is the same as adding: ${N(a)} + ${-b}.`):'';
+    return {topic:L('Integer','Integers'),expr,answer:c,why:`${expr} = ${N(c)}.${rule}`};
+  },
+  power(){
+    const k=pick(['sq','sqrt','cube','cbrt']);
+    if(k==='sq'){const n=r(2,15);return {topic:L('Kuasa dua','Squares'),expr:`${n}${sup(2)}`,answer:n*n,why:`${n} × ${n} = ${n*n}`};}
+    if(k==='sqrt'){const n=r(2,15);return {topic:L('Punca kuasa dua','Square roots'),expr:`√${n*n}`,answer:n,why:`${n} × ${n} = ${n*n}, ${L('jadi','so')} √${n*n} = ${n}`};}
+    const n=r(2,6)*(Math.random()<.3?-1:1);
+    if(k==='cube')return {topic:L('Kuasa tiga','Cubes'),expr:`${P(n)}${sup(3)}`,answer:n**3,why:`${P(n)} × ${P(n)} × ${P(n)} = ${N(n**3)}`};
+    return {topic:L('Punca kuasa tiga','Cube roots'),expr:`∛${P(n**3)}`,answer:n,why:`${P(n)} × ${P(n)} × ${P(n)} = ${N(n**3)}, ${L('jadi','so')} ∛${P(n**3)} = ${N(n)}`};
+  },
+  order(){
+    const t=r(1,3),topic=L('Tertib operasi','Order of operations');
+    if(t===1){const a=r(2,20),b=r(2,9),c=r(2,9);
+      return {topic,expr:`${a} + ${b} × ${c}`,answer:a+b*c,why:L(`Darab dulu: ${b} × ${c} = ${b*c}. Kemudian ${a} + ${b*c} = ${a+b*c}.`,`Multiply first: ${b} × ${c} = ${b*c}. Then ${a} + ${b*c} = ${a+b*c}.`)};}
+    if(t===2){const c=r(2,6),q=r(2,8),b=r(1,10),a=b+c*q,d=r(1,10);
+      return {topic,expr:`(${a} − ${b}) ÷ ${c} + ${d}`,answer:q+d,why:L(`Kurungan dulu: ${a} − ${b} = ${a-b}. Bahagi: ${a-b} ÷ ${c} = ${q}. Tambah: ${q} + ${d} = ${q+d}.`,`Brackets first: ${a} − ${b} = ${a-b}. Divide: ${a-b} ÷ ${c} = ${q}. Add: ${q} + ${d} = ${q+d}.`)};}
+    const a=r(2,9),b=r(2,9),c=r(2,9),d=r(2,9);
+    return {topic,expr:`${a} × ${b} − ${c} × ${d}`,answer:a*b-c*d,why:L(`Darab dulu: ${a} × ${b} = ${a*b} dan ${c} × ${d} = ${c*d}. Kemudian ${a*b} − ${c*d} = ${N(a*b-c*d)}.`,`Multiply first: ${a} × ${b} = ${a*b} and ${c} × ${d} = ${c*d}. Then ${a*b} − ${c*d} = ${N(a*b-c*d)}.`)};
+  },
+  hcf(){
+    let [m,n]=pick([[2,3],[2,5],[3,4],[3,5],[2,7],[4,5],[3,7],[5,6],[4,7],[5,7]]);
+    if(Math.random()<.5)[m,n]=[n,m];
+    const g=r(2,9),a=g*m,b=g*n,topic=L('Faktor & gandaan','Factors & multiples'),split=`${a} = ${g} × ${m} ${L('dan','and')} ${b} = ${g} × ${n}.`;
+    if(Math.random()<.5)return {topic,expr:L(`FSTB bagi ${a} dan ${b}`,`HCF of ${a} and ${b}`),answer:g,why:`${split} ${L('Faktor sepunya terbesar','Highest common factor')} = ${g}.`};
+    return {topic,expr:L(`GSTK bagi ${a} dan ${b}`,`LCM of ${a} and ${b}`),answer:g*m*n,why:`${split} ${L('Gandaan sepunya terkecil','Lowest common multiple')} = ${g} × ${m} × ${n} = ${g*m*n}.`};
+  },
+  eq1(){
+    const x=nz(-6,20),t=r(1,4),topic=L('Persamaan linear','Linear equations');
+    if(t===1){const a=r(2,15);return {topic,expr:`x + ${a} = ${N(x+a)}`,ask:'x',answer:x,why:`x = ${N(x+a)} − ${a} = ${N(x)}`};}
+    if(t===2){const a=r(2,15);return {topic,expr:`x − ${a} = ${N(x-a)}`,ask:'x',answer:x,why:`x = ${N(x-a)} + ${a} = ${N(x)}`};}
+    if(t===3){const a=r(2,9);return {topic,expr:`${a}x = ${N(a*x)}`,ask:'x',answer:x,why:`x = ${N(a*x)} ÷ ${a} = ${N(x)}`};}
+    const a=r(2,6);return {topic,expr:`x ÷ ${a} = ${N(x)}`,ask:'x',answer:a*x,why:`x = ${N(x)} × ${a} = ${N(a*x)}`};
+  },
+  ineq(){
+    const a=r(2,6),x0=r(-5,10),b=nz(-12,12),c=a*x0+b,k=r(1,3),lhs=`${a}x${sgn(b)}`,topic=L('Ketaksamaan linear','Linear inequalities');
+    const small=L('Cari integer x yang terkecil.','Find the smallest integer x.'),large=L('Cari integer x yang terbesar.','Find the largest integer x.');
+    if(k===1)return {topic,ctx:small,expr:`${lhs} > ${N(c)}`,ask:'x',answer:x0+1,why:L(`${a}x > ${N(c-b)}, jadi x > ${N(x0)}. Integer terkecil = ${N(x0+1)}.`,`${a}x > ${N(c-b)}, so x > ${N(x0)}. Smallest integer = ${N(x0+1)}.`)};
+    if(k===2)return {topic,ctx:small,expr:`${lhs} ≥ ${N(c)}`,ask:'x',answer:x0,why:L(`${a}x ≥ ${N(c-b)}, jadi x ≥ ${N(x0)}. Integer terkecil = ${N(x0)}.`,`${a}x ≥ ${N(c-b)}, so x ≥ ${N(x0)}. Smallest integer = ${N(x0)}.`)};
+    return {topic,ctx:large,expr:`${lhs} < ${N(c)}`,ask:'x',answer:x0-1,why:L(`${a}x < ${N(c-b)}, jadi x < ${N(x0)}. Integer terbesar = ${N(x0-1)}.`,`${a}x < ${N(c-b)}, so x < ${N(x0)}. Largest integer = ${N(x0-1)}.`)};
+  },
+  pythag(){
+    const [a,b,c]=pick([[3,4,5],[5,12,13],[8,15,17],[7,24,25],[6,8,10],[9,12,15],[12,16,20],[20,21,29],[9,40,41]]),topic=L('Teorem Pythagoras',"Pythagoras' theorem");
+    if(Math.random()<.6)return {topic,ctx:L(`Segi tiga bersudut tegak dengan sisi ${a} cm dan ${b} cm.`,`A right-angled triangle has sides ${a} cm and ${b} cm.`),expr:L('Panjang hipotenus','Length of the hypotenuse'),post:'cm',answer:c,why:`c = √(${a}² + ${b}²) = √(${a*a} + ${b*b}) = √${c*c} = ${c} cm`};
+    return {topic,ctx:L(`Segi tiga bersudut tegak. Hipotenus ${c} cm, satu sisi ${a} cm.`,`A right-angled triangle. Hypotenuse ${c} cm, one side ${a} cm.`),expr:L('Panjang sisi satu lagi','Length of the other side'),post:'cm',answer:b,why:`b = √(${c}² − ${a}²) = √(${c*c} − ${a*a}) = √${b*b} = ${b} cm`};
+  },
+
+  /* --- Tingkatan 2 --- */
+  seq(){
+    const topic=L('Pola & jujukan','Patterns & sequences'),ctx=L('Cari sebutan seterusnya.','Find the next term.');
+    if(Math.random()<.65){
+      const a=r(-10,20),d=nz(-6,9),t=[0,1,2,3].map(k=>a+k*d);
+      return {topic,ctx,expr:t.map(N).join(', ')+', …',answer:a+4*d,why:`${L('Beza sepunya','Common difference')} = ${N(d)}. ${N(t[3])}${sgn(d)} = ${N(a+4*d)}.`};
+    }
+    const a=r(1,5),q=pick([2,3,-2]),t=[0,1,2,3].map(k=>a*q**k);
+    return {topic,ctx,expr:t.map(N).join(', ')+', …',answer:a*q**4,why:`${L('Setiap sebutan didarab dengan','Each term is multiplied by')} ${N(q)}. ${N(t[3])} × ${P(q)} = ${N(a*q**4)}.`};
+  },
+  subst(){
+    const a=nz(-5,6),b=nz(-5,6),t=r(1,3),topic=L('Rumus algebra','Algebraic formulae'),ctx=L(`Jika a = ${N(a)} dan b = ${N(b)},`,`If a = ${N(a)} and b = ${N(b)},`);
+    if(t===1){const p=r(2,6),q=nz(-6,6),v=p*a+q*b;
+      return {topic,ctx,expr:`${p}a${term(q,'b')}`,answer:v,why:`${p} × ${P(a)}${q<0?' − ':' + '}${Math.abs(q)} × ${P(b)} = ${N(p*a)}${sgn(q*b)} = ${N(v)}`};}
+    if(t===2){const v=a*a+b;return {topic,ctx,expr:`a${sup(2)} + b`,answer:v,why:`${P(a)}² + ${P(b)} = ${a*a}${sgn(b)} = ${N(v)}`};}
+    const p=r(1,6),v=a*(b-p);
+    return {topic,ctx,expr:`a(b − ${p})`,answer:v,why:`${P(a)} × (${N(b)} − ${p}) = ${P(a)} × ${P(b-p)} = ${N(v)}`};
+  },
+  eq2(){
+    const x=nz(-9,12),a=r(2,9),topic=L('Persamaan linear','Linear equations'),so=L('jadi','so');
+    if(Math.random()<.6){const b=nz(-15,15),c=a*x+b;
+      return {topic,expr:`${a}x${sgn(b)} = ${N(c)}`,ask:'x',answer:x,why:`${a}x = ${N(c)}${sgn(-b)} = ${N(c-b)}, ${so} x = ${N(c-b)} ÷ ${a} = ${N(x)}`};}
+    const b=nz(-8,8),c=a*(x+b);
+    return {topic,expr:`${a}(x${sgn(b)}) = ${N(c)}`,ask:'x',answer:x,why:`x${sgn(b)} = ${N(c)} ÷ ${a} = ${N(x+b)}, ${so} x = ${N(x+b)}${sgn(-b)} = ${N(x)}`};
+  },
+  speed(){
+    const v=r(4,24)*5,t=r(2,5),d=v*t,k=r(1,3),topic=L('Laju','Speed'),kmh=L('km/j','km/h'),hr=L('jam','hours');
+    if(k===1)return {topic,ctx:L(`Sebuah kereta bergerak ${d} km dalam ${t} jam.`,`A car travels ${d} km in ${t} hours.`),expr:L('Laju purata','Average speed'),post:kmh,answer:v,why:L(`Laju = jarak ÷ masa = ${d} ÷ ${t} = ${v} km/j`,`Speed = distance ÷ time = ${d} ÷ ${t} = ${v} km/h`)};
+    if(k===2)return {topic,ctx:L(`Sebuah bas bergerak dengan laju ${v} km/j selama ${t} jam.`,`A bus travels at ${v} km/h for ${t} hours.`),expr:L('Jarak yang dilalui','Distance travelled'),post:'km',answer:d,why:L(`Jarak = laju × masa = ${v} × ${t} = ${d} km`,`Distance = speed × time = ${v} × ${t} = ${d} km`)};
+    return {topic,ctx:L(`Jarak ${d} km dilalui dengan laju ${v} km/j.`,`A distance of ${d} km is travelled at ${v} km/h.`),expr:L('Masa yang diambil','Time taken'),post:hr,answer:t,why:L(`Masa = jarak ÷ laju = ${d} ÷ ${v} = ${t} jam`,`Time = distance ÷ speed = ${d} ÷ ${v} = ${t} hours`)};
+  },
+  gradient(){
+    const x1=r(-5,5),y1=r(-5,5),m=nz(-4,5),dx=r(1,4),x2=x1+dx,y2=y1+m*dx,pts=`(${N(x1)}, ${N(y1)}) ${L('dan','and')} (${N(x2)}, ${N(y2)})`;
+    return {topic:L('Kecerunan','Gradient'),ctx:L(`Garis lurus melalui ${pts}.`,`A straight line passes through ${pts}.`),expr:L('Kecerunan garis','Gradient of the line'),ask:'m',answer:m,
+      why:`m = (y₂ − y₁) ÷ (x₂ − x₁) = (${N(y2)} − ${P(y1)}) ÷ (${N(x2)} − ${P(x1)}) = ${N(m*dx)} ÷ ${dx} = ${N(m)}`};
+  },
+  mean(){
+    const n=5,m=r(5,20);let d,tot;
+    do{d=Array.from({length:n-1},()=>r(-4,4));tot=-d.reduce((s,x)=>s+x,0);}while(Math.abs(tot)>4);
+    d.push(tot);
+    const vals=OG.shuffle(d.map(x=>m+x));
+    return {topic:L('Min','Mean'),expr:L(`Min bagi ${vals.join(', ')}`,`Mean of ${vals.join(', ')}`),answer:m,why:L(`Jumlah = ${vals.join(' + ')} = ${m*n}. Min = ${m*n} ÷ ${n} = ${m}`,`Sum = ${vals.join(' + ')} = ${m*n}. Mean = ${m*n} ÷ ${n} = ${m}`)};
+  },
+  polygon(){
+    const n=r(5,12),name=L({5:'pentagon',6:'heksagon',7:'heptagon',8:'oktagon',9:'nonagon',10:'dekagon'},{5:'pentagon',6:'hexagon',7:'heptagon',8:'octagon',9:'nonagon',10:'decagon'})[n];
+    return {topic:L('Poligon','Polygons'),ctx:L(`Poligon dengan ${n} sisi${name?` (${name})`:''}.`,`A polygon with ${n} sides${name?` (${name})`:''}.`),expr:L('Hasil tambah sudut pedalaman','Sum of interior angles'),post:'°',answer:(n-2)*180,why:`(n − 2) × 180° = (${n} − 2) × 180° = ${big((n-2)*180)}°`};
+  },
+
+  /* --- Tingkatan 3 --- */
+  indexLaw(){
+    const v=pick(['a','x','m','p']),k=r(1,3),topic=L('Indeks','Indices');
+    if(k===1){const m=r(2,9),n=r(2,9);return {topic,expr:`${v}${sup(m)} × ${v}${sup(n)} = ${v}<sup>k</sup>`,ask:'k',answer:m+n,why:`${L('Darab asas sama: tambah indeks.','Multiplying the same base: add the indices.')} ${m} + ${n} = ${m+n}`};}
+    if(k===2){const n=r(2,7),m=n+r(1,8);return {topic,expr:`${v}${sup(m)} ÷ ${v}${sup(n)} = ${v}<sup>k</sup>`,ask:'k',answer:m-n,why:`${L('Bahagi asas sama: tolak indeks.','Dividing the same base: subtract the indices.')} ${m} − ${n} = ${m-n}`};}
+    const m=r(2,6),n=r(2,5);
+    return {topic,expr:`(${v}${sup(m)})${sup(n)} = ${v}<sup>k</sup>`,ask:'k',answer:m*n,why:`${L('Kuasa bagi kuasa: darab indeks.','Power of a power: multiply the indices.')} ${m} × ${n} = ${m*n}`};
+  },
+  powerVal(){
+    const [b,max]=pick([[2,10],[3,6],[5,4],[4,5],[-2,7],[-3,5],[10,5]]),n=r(2,max),v=b**n;
+    return {topic:L('Indeks','Indices'),expr:`${P(b)}${sup(n)}`,answer:v,why:`${Array(n).fill(P(b)).join(' × ')} = ${big(v)}`};
+  },
+  stdForm(){
+    const d1=r(1,9),d2=r(0,9),e=nz(-5,6),s=d2?`${d1}.${d2}`:`${d1}`;
+    let num;
+    if(e>0){const digits=d2?String(d1*10+d2):String(d1);num=big(parseInt(digits+'0'.repeat(e-(digits.length-1)),10));}
+    else num='0.'+'0'.repeat(-e-1)+d1+(d2||'');
+    return {topic:L('Bentuk piawai','Standard form'),expr:`${num} = ${s} × 10<sup>k</sup>`,ask:'k',answer:e,
+      why:L(`Titik perpuluhan dialih ${Math.abs(e)} tempat ke ${e>0?'kiri':'kanan'}, jadi k = ${N(e)}.`,`The decimal point moves ${Math.abs(e)} place${Math.abs(e)>1?'s':''} to the ${e>0?'left':'right'}, so k = ${N(e)}.`)};
+  },
+  interest(){
+    const pr=pick([1000,1500,2000,2500,3000,4000,5000,8000,10000]),rt=pick([2,3,4,5,6,8,10]),t=r(1,5),I=pr*rt*t/100;
+    return {topic:L('Faedah mudah','Simple interest'),ctx:L(`Simpanan RM${big(pr)} dengan kadar faedah mudah ${rt}% setahun selama ${t} tahun.`,`Savings of RM${big(pr)} at a simple interest rate of ${rt}% per year for ${t} year${t>1?'s':''}.`),
+      expr:L('Jumlah faedah','Total interest'),pre:'RM',answer:I,why:`I = Prt = ${big(pr)} × ${rt}/100 × ${t} = RM${big(I)}`};
+  },
+  discount(){
+    const p=pick([10,15,20,25,30,40,50]),u=100/gcd(p,100),price=u*r(Math.ceil(20/u),Math.floor(600/u)),cut=price*p/100;
+    return {topic:L('Matematik pengguna','Consumer maths'),ctx:L(`Harga asal sebuah beg RM${price}. Diskaun ${p}%.`,`A bag originally costs RM${price}. Discount ${p}%.`),expr:L('Harga selepas diskaun','Price after discount'),pre:'RM',answer:price-cut,
+      why:L(`Diskaun = ${p}% × RM${price} = RM${cut}. Harga baru = RM${price} − RM${cut} = RM${price-cut}`,`Discount = ${p}% × RM${price} = RM${cut}. New price = RM${price} − RM${cut} = RM${price-cut}`)};
+  },
+  line(){
+    const m=nz(-5,6),c=nz(-9,9),topic=L('Garis lurus','Straight lines'),eqL=L('Persamaan garis lurus','Equation of a straight line');
+    if(Math.random()<.5){const k=pick([2,3]);
+      return {topic,ctx:`${eqL}: ${k}y = ${co(k*m,'x')}${sgn(k*c)}`,expr:L('Kecerunan garis','Gradient of the line'),ask:'m',answer:m,why:L(`Bahagi dengan ${k}: y = ${co(m,'x')}${sgn(c)}. Bentuk y = mx + c, jadi m = ${N(m)}.`,`Divide by ${k}: y = ${co(m,'x')}${sgn(c)}. In the form y = mx + c, m = ${N(m)}.`)};}
+    return {topic,ctx:`${eqL}: y = ${co(m,'x')}${sgn(c)}`,expr:L('Pintasan-y','y-intercept'),ask:'c',answer:c,why:L(`Bentuk y = mx + c. Pintasan-y = c = ${N(c)}.`,`In the form y = mx + c, the y-intercept = c = ${N(c)}.`)};
+  },
+
+  /* --- Tingkatan 4 --- */
+  quad(){
+    let r1=r(-6,9),r2=r(-6,9);if(r1===r2&&Math.random()<.7)r2=r1+r(1,4);
+    const b=-(r1+r2),c=r1*r2,hi=Math.max(r1,r2),lo=Math.min(r1,r2);
+    return {topic:L('Persamaan kuadratik','Quadratic equations'),ctx:r1===r2?L('Selesaikan persamaan.','Solve the equation.'):L('Cari punca yang lebih besar.','Find the larger root.'),
+      expr:`x${sup(2)}${b?term(b,'x'):''}${c?sgn(c):''} = 0`,ask:'x',answer:hi,
+      why:L(`Faktorkan: ${fac(r1)}${fac(r2)} = 0, jadi x = ${N(lo)}${r1===r2?'':` atau x = ${N(hi)}`}.`,`Factorise: ${fac(r1)}${fac(r2)} = 0, so x = ${N(lo)}${r1===r2?'':` or x = ${N(hi)}`}.`)};
+  },
+  base(){
+    const topic=L('Asas nombor','Number bases');
+    if(Math.random()<.6){
+      const B=pick([2,2,5,8]),len=B===2?r(3,6):r(2,3),ds=[r(1,B-1)];
+      for(let i=1;i<len;i++)ds.push(r(0,B-1));
+      const val=ds.reduce((s,d)=>s*B+d,0);
+      return {topic,ctx:L('Tukar ke asas 10.','Convert to base 10.'),expr:`${ds.join('')}<sub>${B}</sub>`,post:'<sub>10</sub>',answer:val,why:ds.map((d,i)=>`${d}×${B}${supU(len-1-i)}`).join(' + ')+` = ${val}`};
+    }
+    const n=r(5,40),bin=n.toString(2),parts=[...bin].map((d,i)=>d==='1'?2**(bin.length-1-i):0).filter(Boolean);
+    return {topic,ctx:L('Tukar ke asas 2.','Convert to base 2.'),expr:`${n}<sub>10</sub>`,post:'<sub>2</sub>',answer:parseInt(bin,10),why:`${n} = ${parts.join(' + ')}, ${L('jadi','so')} ${n} = ${bin}₂`};
+  },
+  sets(){
+    const a=r(8,20),b=r(6,18),i=r(1,Math.min(a,b)-1),u=a+b-i,topic=L('Set','Sets');
+    if(Math.random()<.6)return {topic,ctx:`n(A) = ${a}, n(B) = ${b}, n(A ∩ B) = ${i}`,expr:'n(A ∪ B)',answer:u,why:`n(A ∪ B) = n(A) + n(B) − n(A ∩ B) = ${a} + ${b} − ${i} = ${u}`};
+    return {topic,ctx:`n(A) = ${a}, n(B) = ${b}, n(A ∪ B) = ${u}`,expr:'n(A ∩ B)',answer:i,why:`n(A ∩ B) = n(A) + n(B) − n(A ∪ B) = ${a} + ${b} − ${u} = ${i}`};
+  },
+  dispersion(){
+    const vals=Array.from({length:7},()=>r(2,40));
+    if(Math.random()<.6){const mx=Math.max(...vals),mn=Math.min(...vals);
+      return {topic:L('Sukatan serakan','Measures of dispersion'),expr:L(`Julat bagi ${vals.join(', ')}`,`Range of ${vals.join(', ')}`),answer:mx-mn,why:L(`Julat = nilai terbesar − nilai terkecil = ${mx} − ${mn} = ${mx-mn}`,`Range = largest − smallest = ${mx} − ${mn} = ${mx-mn}`)};}
+    const s=[...vals].sort((p,q)=>p-q);
+    return {topic:'Median',expr:L(`Median bagi ${vals.join(', ')}`,`Median of ${vals.join(', ')}`),answer:s[3],why:L(`Susun dulu: ${s.join(', ')}. Nilai di tengah = ${s[3]}`,`Arrange in order: ${s.join(', ')}. The middle value = ${s[3]}`)};
+  },
+  simul(){
+    const x=r(-5,10),y=r(-5,10),a=r(1,3),askX=Math.random()<.5;
+    return {topic:L('Persamaan serentak','Simultaneous equations'),ctx:L('Selesaikan persamaan serentak.','Solve the simultaneous equations.'),expr:`x + y = ${N(x+y)}<br>${co(a,'x')} − y = ${N(a*x-y)}`,ask:askX?'x':'y',answer:askX?x:y,
+      why:L(`Tambah kedua-dua persamaan: ${a+1}x = ${N((a+1)*x)}, jadi x = ${N(x)}. Kemudian y = ${N(x+y)} − ${P(x)} = ${N(y)}.`,`Add both equations: ${a+1}x = ${N((a+1)*x)}, so x = ${N(x)}. Then y = ${N(x+y)} − ${P(x)} = ${N(y)}.`)};
+  },
+  log(){
+    const [b,max]=pick([[2,10],[3,6],[5,4],[10,6],[4,4]]),n=r(1,max);
+    return {topic:L('Logaritma','Logarithms'),expr:`log<sub>${b}</sub> ${big(b**n)}`,answer:n,why:`${b}${supU(n)} = ${big(b**n)}, ${L('jadi','so')} log<sub>${b}</sub> ${big(b**n)} = ${n}`};
+  },
+  ap(){
+    if(Math.random()<.65){
+      const a=r(-10,20),d=nz(-5,8),n=r(8,25),t=[0,1,2].map(k=>a+k*d),v=a+(n-1)*d;
+      return {topic:L('Janjang aritmetik','Arithmetic progression'),ctx:`${L('Janjang aritmetik','Arithmetic progression')}: ${t.map(N).join(', ')}, …`,expr:L(`Sebutan ke-${n}`,`Term ${n}`),ask:`T<sub>${n}</sub>`,answer:v,why:`T<sub>n</sub> = a + (n − 1)d = ${N(a)} + (${n} − 1)(${N(d)}) = ${N(v)}`};
+    }
+    const a=r(1,5),q=pick([2,3]),n=r(4,7),t=[0,1,2].map(k=>a*q**k),v=a*q**(n-1);
+    return {topic:L('Janjang geometri','Geometric progression'),ctx:`${L('Janjang geometri','Geometric progression')}: ${t.join(', ')}, …`,expr:L(`Sebutan ke-${n}`,`Term ${n}`),ask:`T<sub>${n}</sub>`,answer:v,why:`T<sub>n</sub> = ar<sup>n − 1</sup> = ${a} × ${q}<sup>${n-1}</sup> = ${v}`};
+  },
+
+  /* --- Tingkatan 5 --- */
+  det(){
+    const a=nz(-6,9),b=r(-6,9),c=r(-6,9),d=nz(-6,9),v=a*d-b*c;
+    return {topic:L('Matriks','Matrices'),ctx:L('Cari penentu matriks A.','Find the determinant of matrix A.'),expr:`A = <span class="mat"><i>${N(a)}</i><i>${N(b)}</i><i>${N(c)}</i><i>${N(d)}</i></span>`,ask:'|A|',answer:v,
+      why:`|A| = ad − bc = (${N(a)})(${N(d)}) − (${N(b)})(${N(c)}) = ${N(a*d)} − ${P(b*c)} = ${N(v)}`};
+  },
+  variation(){
+    const topic=L('Ubahan','Variation');
+    if(Math.random()<.5){const k=r(2,9),x1=r(2,8),x2=r(2,12);
+      return {topic,ctx:L(`y berubah secara langsung dengan x. y = ${k*x1} apabila x = ${x1}.`,`y varies directly as x. y = ${k*x1} when x = ${x1}.`),expr:L(`Cari y apabila x = ${x2}`,`Find y when x = ${x2}`),ask:'y',answer:k*x2,why:L(`y = kx. k = ${k*x1} ÷ ${x1} = ${k}. Jadi y = ${k} × ${x2} = ${k*x2}.`,`y = kx. k = ${k*x1} ÷ ${x1} = ${k}. So y = ${k} × ${x2} = ${k*x2}.`)};}
+    const x1=r(2,6),x2=pick([2,3,4,5,6,8,10,12].filter(v=>v!==x1)),k=x1*x2*r(1,4);
+    return {topic,ctx:L(`y berubah secara songsang dengan x. y = ${k/x1} apabila x = ${x1}.`,`y varies inversely as x. y = ${k/x1} when x = ${x1}.`),expr:L(`Cari y apabila x = ${x2}`,`Find y when x = ${x2}`),ask:'y',answer:k/x2,why:L(`y = k ÷ x. k = ${k/x1} × ${x1} = ${k}. Jadi y = ${k} ÷ ${x2} = ${k/x2}.`,`y = k ÷ x. k = ${k/x1} × ${x1} = ${k}. So y = ${k} ÷ ${x2} = ${k/x2}.`)};
+  },
+  insurance(){
+    const Ls=r(8,60)*250,D=pick([250,500,1000]);
+    return {topic:L('Insurans','Insurance'),ctx:L(`Kerugian akibat kemalangan RM${big(Ls)}. Polisi insurans ada deduktibel RM${big(D)}.`,`An accident caused a loss of RM${big(Ls)}. The insurance policy has a deductible of RM${big(D)}.`),
+      expr:L('Bayaran pampasan','Compensation paid'),pre:'RM',answer:Ls-D,why:L(`Pampasan = kerugian − deduktibel = RM${big(Ls)} − RM${big(D)} = RM${big(Ls-D)}`,`Compensation = loss − deductible = RM${big(Ls)} − RM${big(D)} = RM${big(Ls-D)}`)};
+  }
+};
+
+/* ===== Topik ikut umur / tingkatan: [BM, English] ===== */
+const AGES={
+  13:{t:1,types:['integer','power','order','hcf','eq1','ineq','pythag'],
+      info:[['Integer','Integers'],['Kuasa & punca kuasa','Powers & roots'],['Tertib operasi','Order of operations'],['FSTB & GSTK','HCF & LCM'],['Persamaan linear','Linear equations'],['Ketaksamaan','Inequalities'],['Pythagoras','Pythagoras']]},
+  14:{t:2,types:['seq','subst','eq2','speed','gradient','mean','polygon'],
+      info:[['Pola & jujukan','Patterns & sequences'],['Rumus algebra','Algebraic formulae'],['Persamaan linear','Linear equations'],['Laju','Speed'],['Kecerunan','Gradient'],['Min','Mean'],['Poligon','Polygons']]},
+  15:{t:3,types:['indexLaw','powerVal','stdForm','interest','discount','line'],
+      info:[['Indeks','Indices'],['Bentuk piawai','Standard form'],['Faedah mudah','Simple interest'],['Diskaun','Discounts'],['Garis lurus','Straight lines']]},
+  16:{t:4,types:['quad','base','sets','dispersion','log','ap'],
+      info:[['Persamaan kuadratik','Quadratic equations'],['Asas nombor','Number bases'],['Set','Sets'],['Julat & median','Range & median'],['Logaritma*','Logarithms*'],['Janjang*','Progressions*']]},
+  17:{t:5,types:['det','variation','insurance','quad','simul','log','ap'],
+      info:[['Matriks','Matrices'],['Ubahan','Variation'],['Insurans','Insurance'],['Kuadratik','Quadratics'],['Persamaan serentak','Simultaneous equations'],['Logaritma*','Logarithms*'],['Janjang*','Progressions*']]}
+};
+const AGE_LIST=Object.keys(AGES).map(Number);
+const form=t=>L(`Tingkatan ${t}`,`Form ${t}`);
+
+let age=OG.ageParam()??OG.get('math-menengah:age',13);
+age=Math.min(17,Math.max(13,age));
+let bag=[],bagAge=null,buf='',neg=false,current=null;
+
+function make(a){
+  if(!bag.length||bagAge!==a){bag=OG.shuffle([...AGES[a].types,...AGES[a].types]);bagAge=a;}
+  const q=T[bag.pop()]();
+  q.key=(q.ctx||'')+'|'+q.expr;
+  return q;
+}
+
+/* ===== Lukis soalan ===== */
+const plain=h=>h.replace(/<br>/g,'; ').replace(/<[^>]+>/g,'');
+const slotHTML=(cls,text)=>`<span class="slot ${cls}" id="slot">${text}</span>`;
+const ansText=q=>`${q.ask?q.ask+' = ':''}${q.pre||''}${N(q.answer)}${q.post?(q.post.startsWith('<')?q.post:' '+q.post):''}`;
+
+function show(q){
+  current=q;buf='';neg=false;
+  $('pad-wrap').hidden=false;
+  $('topic').textContent=q.topic;
+  $('ctx').hidden=!q.ctx;$('ctx').innerHTML=q.ctx||'';
+  const len=plain(q.expr).length;
+  $('expr').className='expr'+(len<=8?' xl':len<=16?' lg':'');
+  $('expr').innerHTML=q.expr;
+  $('ansline').innerHTML=`<span class="ask">${q.ask?q.ask+' =':'='}</span>${q.pre?`<span>${q.pre}</span>`:''}${slotHTML('','?')}${q.post?`<span>${q.post}</span>`:''}`;
+  $('fix').hidden=true;$('steps').hidden=true;
+  setKeys(true);paintNeg();
+}
+
+function reveal(q,given,ok){
+  $('slot').outerHTML=slotHTML(ok?'ok':'bad',N(given));
+  OG.flash($('slot'),ok?'pop':'shake');
+  setKeys(false);
+  if(!ok){
+    $('fix').hidden=false;
+    $('fix').querySelector('span').innerHTML=`${L('Jawapan betul','Correct answer')}: ${ansText(q)}`;
+    $('steps').hidden=false;
+    $('steps').innerHTML=`<b>${L('Cara kira','Working')}</b>${q.why}`;
+  }
+}
+
+/* ===== Papan nombor ===== */
+const ERASE='<svg viewBox="0 0 24 24"><path d="M20 20H9L4 15a2 2 0 0 1 0-2.8l8.2-8.2a2 2 0 0 1 2.8 0l5 5a2 2 0 0 1 0 2.8L13 19"/><path d="M8 11l6 6"/></svg>';
+const TICK='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+function buildKeys(){
+  const pad=$('keypad');pad.innerHTML='';
+  ['1','2','3','4','5','6','7','8','9','neg','0','del','go'].forEach(k=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='num'+(k==='neg'?' neg':'')+(k==='go'?' go-btn':'');
+    b.innerHTML=k==='del'?ERASE:k==='go'?L('Hantar','Submit')+' '+TICK:k==='neg'?`±<small>${L('negatif','negative')}</small>`:k;
+    b.setAttribute('aria-label',k==='del'?L('Padam','Delete'):k==='go'?L('Hantar jawapan','Submit answer'):k==='neg'?L('Tukar tanda negatif','Toggle negative'):k);
+    b.addEventListener('click',()=>key(k));
+    pad.appendChild(b);
+  });
+}
+function setKeys(on){$('keypad').querySelectorAll('button').forEach(b=>b.disabled=!on);}
+function paintNeg(){$('keypad').querySelector('.neg').classList.toggle('on',neg);}
+function key(k){
+  const st=quiz.state;
+  if(!st||st.locked||st.done||!current)return;
+  if(k==='go'){
+    if(!buf){OG.say($('status'),L('Taip jawapan dulu.','Type an answer first.'));return;}
+    quiz.submit((neg?-1:1)*parseInt(buf,10));return;
+  }
+  if(k==='del'){if(buf)buf=buf.slice(0,-1);else neg=false;}
+  else if(k==='neg')neg=!neg;
+  else if(buf.length<6)buf=(buf==='0'?'':buf)+k;
+  const s=$('slot');
+  s.textContent=buf?(neg?'−':'')+buf:(neg?'−':'?');
+  s.classList.toggle('filled',!!buf||neg);
+  paintNeg();
+}
+
+/* ===== Umur / tingkatan ===== */
+function buildAges(){
+  const box=$('ages');box.innerHTML='';
+  AGE_LIST.forEach(a=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='lvl';b.dataset.age=a;
+    b.innerHTML=`<b>${a}</b><span>${L('T','F')}${AGES[a].t}</span>`;
+    b.setAttribute('aria-label',L(`Umur ${a}, Tingkatan ${AGES[a].t}`,`Age ${a}, Form ${AGES[a].t}`));
+    b.setAttribute('aria-pressed',String(a===age));
+    b.addEventListener('click',()=>setAge(a));
+    box.appendChild(b);
+  });
+}
+function setAge(a){
+  age=a;OG.set('math-menengah:age',a);
+  document.querySelectorAll('#ages .lvl').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.age===a)));
+  $('info').innerHTML=`<li>${form(AGES[a].t)} · ${L('umur','age')} ${a}</li>`+AGES[a].info.map(t=>`<li>${L(t[0],t[1])}</li>`).join('');
+  bag=[];
+  quiz.start(a);
+}
+
+const quiz=OG.quiz({
+  game:'math-menengah',total:10,
+  make,show,reveal,
+  prompt:q=>q.ctx?'':L('Kira dan taip jawapan.','Work it out and type the answer.'),
+  explain:q=>L(`Belum betul. Jawapannya ${ansText(q)}. Baca cara kira di atas.`,`Not quite. The answer is ${ansText(q)}. Read the working above.`),
+  review:(q,given)=>({sum:`${q.expr.replace(/<br>/g,'; ')} → ${ansText(q)}`,note:L(`kamu jawab ${N(given)}`,`you answered ${N(given)}`)}),
+  nextLevel:a=>AGES[+a+1]?{id:+a+1,label:form(AGES[+a+1].t)}:null,
+  onUp:id=>setAge(+id),
+  onFinish:()=>{current=null;$('pad-wrap').hidden=true;}
+});
+
+$('restart').addEventListener('click',()=>{bag=[];quiz.start(age);});
+OG.onLang(()=>{buildAges();buildKeys();setAge(age);});
+
+document.addEventListener('keydown',e=>{
+  if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(/^[0-9]$/.test(e.key)){e.preventDefault();key(e.key);}
+  else if(e.key==='-'||e.key==='_'){e.preventDefault();key('neg');}
+  else if(e.key==='Backspace'){e.preventDefault();key('del');}
+  else if(e.key==='Enter'){
+    const f=document.activeElement;
+    if(!f||f===document.body||f.closest('#keypad')||(buf&&!f.closest('a,.act,.lang'))){e.preventDefault();key('go');}
+  }
+});
+
+buildAges();buildKeys();setAge(age);
+})();
+</script>
+</body>
+</html>

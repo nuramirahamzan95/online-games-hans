@@ -3,17 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Soalan matematik rawak untuk kanak-kanak umur 6 hingga 12. Tambah, tolak, darab dan bahagi dengan nombor 1 hingga 20.">
+<meta name="description" content="Soalan matematik rawak untuk kanak-kanak umur 6 hingga 12. Random maths questions for children aged 6 to 12. Dwibahasa / bilingual.">
 <meta name="theme-color" content="#F3F7FC" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#161C26" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
-<title>Soalan Math · Main Nombor</title>
+<title data-en="Math Quiz · Main Nombor">Soalan Math · Main Nombor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Lexend:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="../../assets/common.css">
 <style>
-/* Pilihan umur 6–12 */
 .ages{flex-wrap:nowrap}
 .ages .lvl{flex:1;min-width:46px;padding:8px 6px 7px;gap:3px}
 .ages .lvl b{font-family:var(--f-display);font-size:22px;font-weight:800;line-height:1}
@@ -22,7 +21,6 @@
 .info li{font-size:13px;font-weight:500;background:var(--card);border:2px solid var(--thin);border-radius:999px;padding:3px 12px}
 .info li:first-child{background:var(--tag-bg);border-color:var(--edge);color:var(--tag-ink);font-weight:600}
 
-/* Soalan */
 .q-sheet{container-type:inline-size}
 .eq{display:flex;align-items:center;justify-content:center;gap:.24em;font-family:var(--f-display);font-weight:800;font-size:clamp(30px,13cqi,64px);line-height:1;padding:30px 0 24px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .eq.long{font-size:clamp(26px,11cqi,56px)}
@@ -34,7 +32,6 @@
 .fix{display:flex;justify-content:center;margin:-6px 0 10px}
 .fix span{font-weight:600;background:var(--ok-bg);color:var(--ok-ink);border:2px solid var(--ok);border-radius:999px;padding:4px 14px}
 
-/* Titik bantu (ten-frame) untuk umur 6 */
 .aid{display:flex;align-items:center;justify-content:center;gap:10px 12px;flex-wrap:wrap;margin:-6px 0 8px}
 .aid > span{font-family:var(--f-display);font-weight:800;font-size:26px;color:var(--pen)}
 .frame{display:grid;grid-template-columns:repeat(5,18px);gap:4px;padding:6px;border:2px solid var(--thin);border-radius:10px;background:var(--box)}
@@ -43,9 +40,8 @@
 .frame i.on{background:var(--pen)}
 .frame.b i.on{background:var(--sel)}
 .frame i.gone{border:2px dashed var(--bad);background:var(--bad-bg)}
-.aid-note{width:100%;text-align:center;font-size:13px;color:var(--muted)}
+.aid-note{width:100%;margin:0;text-align:center;font-size:13px;color:var(--muted)}
 
-/* Jawapan: pilihan (umur 6–8) atau papan nombor (umur 9–12) */
 .choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .choices .num{font-size:46px;padding:18px 0 15px}
 .keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
@@ -59,23 +55,23 @@
 </head>
 <body>
 <main class="page">
-  <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a>
+  <div class="topbar"><a class="back" href="../../index.html#back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a></div>
 
   <header class="top">
     <div class="brand">
-      <h1>Soalan Math <span class="tag">+ − × ÷</span></h1>
-      <p>10 soalan rawak guna nombor 1 hingga 20. Pilih umur, soalan ikut tahap.</p>
+      <h1><span data-en="Math Quiz">Soalan Math</span> <span class="tag">+ − × ÷</span></h1>
+      <p data-en="10 random questions using numbers 1 to 20. Choose an age and the questions match that level.">10 soalan rawak guna nombor 1 hingga 20. Pilih umur, soalan ikut tahap.</p>
     </div>
-    <div class="levels ages" id="ages" role="group" aria-label="Pilih umur"></div>
+    <div class="levels ages" id="ages" role="group" aria-label="Pilih umur" data-en-label="Choose age"></div>
   </header>
   <ul class="info" id="info" aria-live="polite"></ul>
 
   <section class="play">
     <div class="board-col">
       <div class="stats">
-        <div class="stat"><span>Soalan</span><b id="st-q">1/10</b></div>
-        <div class="stat"><span>Betul</span><b id="st-ok">0</b></div>
-        <div class="stat"><span>Masa</span><b id="st-time">00:00</b></div>
+        <div class="stat"><span data-en="Question">Soalan</span><b id="st-q">1/10</b></div>
+        <div class="stat"><span data-en="Correct">Betul</span><b id="st-ok">0</b></div>
+        <div class="stat"><span data-en="Time">Masa</span><b id="st-time">00:00</b></div>
       </div>
       <div class="sheet q-sheet">
         <div class="dots" id="dots" role="img"></div>
@@ -86,11 +82,11 @@
         </div>
         <div class="result" id="result" hidden>
           <div class="stars" id="stars" aria-hidden="true"></div>
-          <h2 id="res-title">Tahniah!</h2>
+          <h2 id="res-title"></h2>
           <p id="res-text"></p>
           <div class="review" id="res-list"></div>
           <div class="win-actions">
-            <button type="button" class="act primary" id="again">Main lagi</button>
+            <button type="button" class="act primary" id="again" data-en="Play again">Main lagi</button>
             <button type="button" class="act" id="up" hidden></button>
           </div>
         </div>
@@ -100,25 +96,25 @@
 
     <aside class="side">
       <div id="pad-wrap">
-        <p class="label" id="pad-label">Pilih jawapan</p>
+        <p class="label" id="pad-label"></p>
         <div class="choices" id="choices"></div>
         <div class="keypad" id="keypad" hidden></div>
       </div>
       <button type="button" class="act primary next" id="next" hidden><span>Seterusnya</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>Mula semula</button>
+      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg><span data-en="Restart">Mula semula</span></button>
       <div class="rules">
-        <h2>Cara main</h2>
+        <h2 data-en="How to play">Cara main</h2>
         <ol>
-          <li>Pilih umur kamu di atas. Soalan akan ikut tahap umur.</li>
-          <li>Jawab 10 soalan. Umur 6–8 pilih jawapan, umur 9–12 taip jawapan.</li>
-          <li>Kalau salah, tengok jawapan betul dan tekan <b>Seterusnya</b>.</li>
+          <li data-en="Choose your age at the top. The questions follow that level.">Pilih umur kamu di atas. Soalan akan ikut tahap umur.</li>
+          <li data-en="Answer 10 questions. Ages 6–8 pick an answer, ages 9–12 type the answer.">Jawab 10 soalan. Umur 6–8 pilih jawapan, umur 9–12 taip jawapan.</li>
+          <li data-en="If you get it wrong, look at the correct answer and press &lt;b&gt;Next&lt;/b&gt;.">Kalau salah, tengok jawapan betul dan tekan <b>Seterusnya</b>.</li>
         </ol>
         <div class="legend">
-          <span class="chip ok"><i></i>Betul</span>
-          <span class="chip bad"><i></i>Salah</span>
-          <span class="chip sel"><i></i>Soalan sekarang</span>
+          <span class="chip ok"><i></i><span data-en="Correct">Betul</span></span>
+          <span class="chip bad"><i></i><span data-en="Wrong">Salah</span></span>
+          <span class="chip sel"><i></i><span data-en="Current question">Soalan sekarang</span></span>
         </div>
-        <p class="kbd-tip">Papan kekunci: <kbd>0</kbd>–<kbd>9</kbd> taip jawapan, <kbd>Backspace</kbd> padam, <kbd>Enter</kbd> hantar / seterusnya.</p>
+        <p class="kbd-tip" data-en="Keyboard: &lt;kbd&gt;0&lt;/kbd&gt;–&lt;kbd&gt;9&lt;/kbd&gt; type, &lt;kbd&gt;Backspace&lt;/kbd&gt; delete, &lt;kbd&gt;Enter&lt;/kbd&gt; submit / next.">Papan kekunci: <kbd>0</kbd>–<kbd>9</kbd> taip jawapan, <kbd>Backspace</kbd> padam, <kbd>Enter</kbd> hantar / seterusnya.</p>
       </div>
     </aside>
   </section>
@@ -129,38 +125,38 @@
 <script>
 (() => {
 const $=id=>document.getElementById(id);
+const L=OG.L,r=OG.rand;
 
 /* ===== Tahap ikut umur — ubah di sini kalau nak laraskan kesukaran =====
    sum: had tambah/tolak (umur kecil). Tiada sum = dua nombor 1–20.
    mul/div: [[min,max] nombor pertama/pembahagi, [min,max] nombor kedua/hasil]
-   missing: peratus soalan "cari nombor hilang" (contoh: ? + 5 = 12) */
+   missing: peratus soalan "cari nombor hilang" (contoh: ? + 5 = 12)
+   info: [BM, English] */
 const ALL=['+','−','×','÷'];
 const AGES={
   6: {ops:['+','−'],sum:10,mode:'choice',aid:true,
-      info:['Tambah & tolak hingga 10','Ada titik untuk dikira']},
+      info:[['Tambah & tolak hingga 10','Add & subtract up to 10'],['Ada titik untuk dikira','Dots to help count']]},
   7: {ops:['+','−'],sum:20,mode:'choice',
-      info:['Tambah & tolak hingga 20']},
+      info:[['Tambah & tolak hingga 20','Add & subtract up to 20']]},
   8: {ops:['+','−','×'],sum:20,mul:[[2,5],[1,10]],mode:'choice',
-      info:['Tambah & tolak hingga 20','Darab sifir 2–5']},
+      info:[['Tambah & tolak hingga 20','Add & subtract up to 20'],['Darab sifir 2–5','Times tables 2–5']]},
   9: {ops:ALL,mul:[[2,10],[1,10]],div:[[2,5],[1,10]],mode:'type',
-      info:['Tambah & tolak 1–20','Darab sifir 2–10','Bahagi sifir 2–5']},
+      info:[['Tambah & tolak 1–20','Add & subtract 1–20'],['Darab sifir 2–10','Times tables 2–10'],['Bahagi sifir 2–5','Divide by 2–5']]},
   10:{ops:ALL,mul:[[2,12],[2,12]],div:[[2,10],[2,10]],mode:'type',
-      info:['Tambah & tolak 1–20','Darab sifir 2–12','Bahagi sifir 2–10']},
+      info:[['Tambah & tolak 1–20','Add & subtract 1–20'],['Darab sifir 2–12','Times tables 2–12'],['Bahagi sifir 2–10','Divide by 2–10']]},
   11:{ops:ALL,mul:[[2,20],[2,9]],div:[[2,12],[2,12]],mode:'type',
-      info:['Tambah & tolak 1–20','Darab 1–20 × sifir 2–9','Bahagi sifir 2–12']},
+      info:[['Tambah & tolak 1–20','Add & subtract 1–20'],['Darab 1–20 × sifir 2–9','Multiply 1–20 × 2–9'],['Bahagi sifir 2–12','Divide by 2–12']]},
   12:{ops:ALL,mul:[[2,20],[2,12]],div:[[2,20],[2,12]],missing:.4,mode:'type',
-      info:['Empat operasi, nombor 1–20','Darab & bahagi hingga sifir 12','Ada soalan cari nombor hilang']}
+      info:[['Empat operasi, nombor 1–20','All four operations, 1–20'],['Darab & bahagi hingga sifir 12','Multiply & divide up to 12'],['Ada soalan cari nombor hilang','Find the missing number']]}
 };
 const AGE_LIST=Object.keys(AGES).map(Number);
 
-let age=OG.get('soalan-math:age',7);
-if(!AGES[age])age=7;
+let age=OG.ageParam()??OG.get('soalan-math:age',7);
+age=Math.min(12,Math.max(6,age));
 let bag=[],buf='',current=null;
 
 /* ===== Jana soalan ===== */
 function nextOp(ops){if(!bag.length)bag=OG.shuffle([...ops,...ops,...ops]);return bag.pop();}
-const r=OG.rand;
-
 function make(a){
   const cfg=AGES[a],op=nextOp(cfg.ops);
   let x,y,z;
@@ -194,7 +190,7 @@ function choicesFor(q){
 }
 
 const full=q=>`${q.a} ${q.op} ${q.b} = ${q.c}`;
-const words={'+':'tambah','−':'tolak','×':'darab','÷':'bahagi'};
+const WORDS={'+':['tambah','plus'],'−':['tolak','minus'],'×':['darab','times'],'÷':['bahagi','divided by']};
 
 /* ===== Lukis soalan ===== */
 function eqHTML(q,slotHTML){
@@ -202,12 +198,15 @@ function eqHTML(q,slotHTML){
   t[q.hide]=slotHTML;
   return `${t.a}<span class="op">${q.op}</span>${t.b}<span class="op">=</span>${t.c}`;
 }
-function slot(cls,text){return `<span class="slot ${cls}" id="slot">${text}</span>`;}
-
+const slot=(cls,text)=>`<span class="slot ${cls}" id="slot">${text}</span>`;
 function frame(n,gone,cls){
   let h=`<div class="frame ${cls||''}">`;
   for(let k=0;k<10;k++)h+=k<n?`<i class="${k>=n-gone?'gone':'on'}"></i>`:'<i></i>';
   return h+'</div>';
+}
+function spoken(q){
+  const s={a:q.a,b:q.b,c:q.c};s[q.hide]=L('berapa','what');
+  return `${s.a} ${L(WORDS[q.op][0],WORDS[q.op][1])} ${s.b} ${L('sama dengan','equals')} ${s.c}`;
 }
 
 function show(q){
@@ -222,8 +221,8 @@ function show(q){
   aid.hidden=!AGES[q.age].aid;
   if(AGES[q.age].aid){
     aid.innerHTML=q.op==='+'
-      ?frame(q.a,0)+'<span>+</span>'+frame(q.b,0,'b')+'<p class="aid-note">Kira semua titik</p>'
-      :frame(q.a,q.b)+`<p class="aid-note">${q.a} titik, buang ${q.b}. Berapa tinggal?</p>`;
+      ?frame(q.a,0)+'<span>+</span>'+frame(q.b,0,'b')+`<p class="aid-note">${L('Kira semua titik','Count all the dots')}</p>`
+      :frame(q.a,q.b)+`<p class="aid-note">${L(`${q.a} titik, buang ${q.b}. Berapa tinggal?`,`${q.a} dots, take away ${q.b}. How many are left?`)}</p>`;
   }
   if(AGES[q.age].mode==='choice'){
     $('choices').innerHTML='';
@@ -233,20 +232,13 @@ function show(q){
       b.addEventListener('click',()=>quiz.submit(v));
       $('choices').appendChild(b);
     });
-  }else{
-    setKeys(true);
-  }
-}
-
-function spoken(q){
-  const s={a:q.a,b:q.b,c:q.c};s[q.hide]='berapa';
-  return `${s.a} ${words[q.op]} ${s.b} sama dengan ${s.c}`;
+  }else setKeys(true);
 }
 
 function reveal(q,given,ok){
   $('slot').outerHTML=slot(ok?'ok':'bad',given);
-  const s=$('slot');OG.flash(s,ok?'pop':'shake');
-  if(!ok){$('fix').hidden=false;$('fix').querySelector('span').textContent='Jawapan betul: '+q.answer;}
+  OG.flash($('slot'),ok?'pop':'shake');
+  if(!ok){$('fix').hidden=false;$('fix').querySelector('span').textContent=L('Jawapan betul: ','Correct answer: ')+q.answer;}
   if(AGES[q.age].mode==='choice'){
     $('choices').querySelectorAll('.num').forEach(b=>{
       const v=+b.dataset.v;b.disabled=true;
@@ -258,21 +250,24 @@ function reveal(q,given,ok){
 /* ===== Papan nombor (umur 9–12) ===== */
 const ERASE='<svg viewBox="0 0 24 24"><path d="M20 20H9L4 15a2 2 0 0 1 0-2.8l8.2-8.2a2 2 0 0 1 2.8 0l5 5a2 2 0 0 1 0 2.8L13 19"/><path d="M8 11l6 6"/></svg>';
 const TICK='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
-['1','2','3','4','5','6','7','8','9','del','0','go'].forEach(k=>{
-  const b=document.createElement('button');
-  b.type='button';b.className='num'+(k==='go'?' go':'');
-  b.innerHTML=k==='del'?ERASE:k==='go'?TICK:k;
-  b.setAttribute('aria-label',k==='del'?'Padam':k==='go'?'Hantar jawapan':k);
-  b.addEventListener('click',()=>key(k));
-  $('keypad').appendChild(b);
-});
+function buildKeys(){
+  const pad=$('keypad');pad.innerHTML='';
+  ['1','2','3','4','5','6','7','8','9','del','0','go'].forEach(k=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='num'+(k==='go'?' go':'');
+    b.innerHTML=k==='del'?ERASE:k==='go'?TICK:k;
+    b.setAttribute('aria-label',k==='del'?L('Padam','Delete'):k==='go'?L('Hantar jawapan','Submit answer'):k);
+    b.addEventListener('click',()=>key(k));
+    pad.appendChild(b);
+  });
+}
 function setKeys(on){$('keypad').querySelectorAll('button').forEach(b=>b.disabled=!on);}
 function key(k){
   const st=quiz.state;
   if(!st||st.locked||st.done||!current)return;
   if(k==='del')buf=buf.slice(0,-1);
   else if(k==='go'){
-    if(!buf){OG.say($('status'),'Taip jawapan dulu.');return;}
+    if(!buf){OG.say($('status'),L('Taip jawapan dulu.','Type an answer first.'));return;}
     quiz.submit(+buf);return;
   }else if(buf.length<3)buf=(buf==='0'?'':buf)+k;
   const s=$('slot');
@@ -281,22 +276,25 @@ function key(k){
 }
 
 /* ===== Umur ===== */
-AGE_LIST.forEach(a=>{
-  const b=document.createElement('button');
-  b.type='button';b.className='lvl';b.dataset.age=a;
-  b.innerHTML=`<b>${a}</b><span>tahun</span>`;
-  b.setAttribute('aria-label',`Umur ${a} tahun`);
-  b.addEventListener('click',()=>setAge(a));
-  $('ages').appendChild(b);
-});
+function buildAges(){
+  const box=$('ages');box.innerHTML='';
+  AGE_LIST.forEach(a=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='lvl';b.dataset.age=a;
+    b.innerHTML=`<b>${a}</b><span>${L('tahun','yrs')}</span>`;
+    b.setAttribute('aria-label',L(`Umur ${a} tahun`,`Age ${a}`));
+    b.addEventListener('click',()=>setAge(a));
+    box.appendChild(b);
+  });
+}
 function setAge(a){
   age=a;OG.set('soalan-math:age',a);
   const cfg=AGES[a];
   document.querySelectorAll('#ages .lvl').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.age===a)));
-  $('info').innerHTML=`<li>Umur ${a} tahun</li>`+cfg.info.map(t=>`<li>${t}</li>`).join('');
+  $('info').innerHTML=`<li>${L(`Umur ${a} tahun`,`Age ${a}`)}</li>`+cfg.info.map(t=>`<li>${L(t[0],t[1])}</li>`).join('');
   const choice=cfg.mode==='choice';
   $('choices').hidden=!choice;$('keypad').hidden=choice;
-  $('pad-label').textContent=choice?'Pilih jawapan':'Taip jawapan';
+  $('pad-label').textContent=choice?L('Pilih jawapan','Choose the answer'):L('Taip jawapan','Type the answer');
   bag=[];
   quiz.start(a);
 }
@@ -304,15 +302,16 @@ function setAge(a){
 const quiz=OG.quiz({
   game:'soalan-math',total:10,
   make,show,reveal,
-  prompt:q=>q.hide==='c'?'Berapa jawapannya?':'Cari nombor yang hilang.',
-  explain:q=>`Belum betul. ${full(q)}`,
-  review:(q,given)=>({sum:full(q),note:`kamu jawab ${given}`}),
-  nextLevel:a=>AGES[+a+1]?{id:+a+1,label:`umur ${+a+1}`}:null,
+  prompt:q=>q.hide==='c'?L('Berapa jawapannya?','What is the answer?'):L('Cari nombor yang hilang.','Find the missing number.'),
+  explain:q=>`${L('Belum betul.','Not quite.')} ${full(q)}`,
+  review:(q,given)=>({sum:full(q),note:L(`kamu jawab ${given}`,`you answered ${given}`)}),
+  nextLevel:a=>AGES[+a+1]?{id:+a+1,label:L(`umur ${+a+1}`,`age ${+a+1}`)}:null,
   onUp:id=>setAge(+id),
   onFinish:()=>{current=null;$('pad-wrap').hidden=true;}
 });
 
 $('restart').addEventListener('click',()=>{bag=[];quiz.start(age);});
+OG.onLang(()=>{buildAges();buildKeys();setAge(age);});
 
 document.addEventListener('keydown',e=>{
   if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey)return;
@@ -322,11 +321,11 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='Enter'){
     /* Enter = hantar, kecuali fokus pada butang lain (umur, mula semula, main lagi) */
     const f=document.activeElement;
-    if(!f||f===document.body||f.closest('#keypad')||(buf&&!f.closest('a,.act'))){e.preventDefault();key('go');}
+    if(!f||f===document.body||f.closest('#keypad')||(buf&&!f.closest('a,.act,.lang'))){e.preventDefault();key('go');}
   }
 });
 
-setAge(age);
+buildAges();buildKeys();setAge(age);
 })();
 </script>
 </body>
