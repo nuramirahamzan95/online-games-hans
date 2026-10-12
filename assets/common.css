@@ -1,0 +1,182 @@
+/* Main Nombor — design system dikongsi oleh menu dan semua game.
+   Gaya: muka surat buku latihan sekolah (kertas petak + garis margin). Dark mode = papan hitam.
+   Style khusus game (papan sudoku, jam, kad) duduk dalam <style> fail game masing-masing. */
+:root{
+  --paper:#F3F7FC; --grid:#DDE7F4; --margin:#F2C4C4;
+  --card:#FFFFFF; --box:#E5EDF8; --ink:#1C2A4D; --muted:#56668B; --thin:#C4D1E5; --edge:#1C2A4D;
+  --pen:#2B63D6; --pen-ink:#FFFFFF;
+  --sel:#E39B00; --hl:#FFE7A3; --hl-soft:#FFF6DA; --same:#DDE8FB;
+  --tag-bg:#FFD24A; --tag-ink:#1C2A4D;
+  --ok:#23925A; --ok-bg:#D4F1E0; --ok-ink:#0F5F37;
+  --bad:#D63838; --bad-bg:#FCDADA; --bad-ink:#9E1B1B;
+  --veil:rgba(243,247,252,.92);
+  /* warna latar ilustrasi kad game di menu */
+  --acc-yellow:#FFE08A; --acc-sky:#CFE0FF; --acc-mint:#C4EDD6; --acc-pink:#FFD6DE; --acc-peach:#FFDDBA;
+  --f-display:"Grandstander","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Lexend",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#161C26; --grid:#1E2633; --margin:#4A2D36;
+    --card:#212A38; --box:#1A2230; --ink:#EEF2F8; --muted:#9DAAC0; --thin:#38455A; --edge:#55647D;
+    --pen:#6E9BFF; --pen-ink:#0F1520;
+    --sel:#F2C94C; --hl:#4A4020; --hl-soft:#262A2C; --same:#24324E;
+    --tag-bg:#F2C94C; --tag-ink:#161C26;
+    --ok:#46C384; --ok-bg:#1B4A33; --ok-ink:#A3EEC6;
+    --bad:#F06A6A; --bad-bg:#5A2328; --bad-ink:#FFB4B4;
+    --veil:rgba(22,28,38,.92);
+    --acc-yellow:#4A4020; --acc-sky:#24324E; --acc-mint:#1B4A33; --acc-pink:#4A2533; --acc-peach:#4A3420;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#161C26; --grid:#1E2633; --margin:#4A2D36;
+  --card:#212A38; --box:#1A2230; --ink:#EEF2F8; --muted:#9DAAC0; --thin:#38455A; --edge:#55647D;
+  --pen:#6E9BFF; --pen-ink:#0F1520;
+  --sel:#F2C94C; --hl:#4A4020; --hl-soft:#262A2C; --same:#24324E;
+  --tag-bg:#F2C94C; --tag-ink:#161C26;
+  --ok:#46C384; --ok-bg:#1B4A33; --ok-ink:#A3EEC6;
+  --bad:#F06A6A; --bad-bg:#5A2328; --bad-ink:#FFB4B4;
+  --veil:rgba(22,28,38,.92);
+  --acc-yellow:#4A4020; --acc-sky:#24324E; --acc-mint:#1B4A33; --acc-pink:#4A2533; --acc-peach:#4A3420;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  color:var(--ink); font-family:var(--f-body); font-size:15px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; min-height:100vh;
+}
+[hidden]{display:none!important}
+a{color:inherit}
+button{font:inherit;color:inherit;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+button:focus-visible,a:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+
+/* Page + garis margin buku latihan */
+.page{position:relative;z-index:1;max-width:960px;margin:0 auto;padding-inline:16px;padding-block:20px 48px;display:flex;flex-direction:column;gap:22px}
+@media (min-width:780px){
+  .page{padding-inline:76px 32px;padding-top:24px}
+  body::before{content:"";position:fixed;z-index:0;top:0;bottom:0;left:max(44px,calc(50% - 436px));width:2px;background:var(--margin);pointer-events:none}
+}
+
+/* Butang balik ke menu */
+.back{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14px;line-height:1;text-decoration:none;background:var(--card);border:2px solid var(--edge);border-radius:999px;padding:8px 15px 7px 10px;box-shadow:0 3px 0 var(--edge);transition:transform .08s,box-shadow .08s}
+.back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.back:hover{background:var(--box)}
+.back:active{transform:translateY(2px);box-shadow:0 1px 0 var(--edge)}
+
+/* Header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 24px}
+.brand h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(38px,7vw,58px);line-height:.95;letter-spacing:-.01em;display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;text-wrap:balance}
+.tag{font-size:.42em;background:var(--tag-bg);color:var(--tag-ink);border:2px solid var(--edge);border-radius:10px;padding:5px 10px 3px;transform:rotate(-6deg);box-shadow:2px 3px 0 var(--edge);font-variant-numeric:tabular-nums;white-space:nowrap}
+.brand p{margin:10px 0 0;color:var(--muted);max-width:46ch}
+
+/* Pilihan level (segmented) */
+.levels{display:flex;gap:6px;padding:6px;background:var(--card);border:2px solid var(--edge);border-radius:16px}
+.lvl{font-weight:600;font-size:14px;line-height:1;background:transparent;border:0;border-radius:11px;padding:11px 14px 10px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;min-width:88px}
+.lvl:hover{background:var(--box)}
+.lvl[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.pips{display:flex;gap:4px}
+.pips i{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.25}
+.pips i.on{opacity:1}
+@media (max-width:560px){.levels{width:100%}.lvl{flex:1;min-width:0;padding-inline:6px}}
+
+/* Kawasan main: kiri = papan/soalan, kanan = butang + cara main */
+.play{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:30px 40px;align-items:start}
+@media (max-width:780px){
+  .play{grid-template-columns:minmax(0,1fr)}
+  .board-col,.side{width:100%;max-width:440px;justify-self:center}
+}
+.side{display:flex;flex-direction:column;gap:22px}
+
+/* Statistik */
+.stats{display:flex;gap:8px;margin-bottom:14px}
+.stat{flex:1;min-width:0;background:var(--card);border:2px solid var(--thin);border-radius:12px;padding:7px 12px 6px;display:flex;flex-direction:column}
+.stat span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.stat b{font-family:var(--f-display);font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15}
+.stat.warn b{color:var(--bad-ink)}
+
+.status{margin:18px 0 0;min-height:1.5em;font-weight:500;font-size:16px}
+.status.good{color:var(--ok-ink)}
+.status.oops{color:var(--bad-ink)}
+.label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 10px}
+
+/* Kad utama (papan soalan) */
+.sheet{position:relative;background:var(--card);border:3px solid var(--edge);border-radius:22px;box-shadow:4px 6px 0 var(--edge)}
+
+/* Butang besar (nombor / jawapan) */
+.num{font-family:var(--f-display);font-weight:800;font-size:38px;line-height:1;background:var(--card);border:2px solid var(--edge);border-radius:16px;box-shadow:0 5px 0 var(--edge);padding:12px 0 9px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform .08s,box-shadow .08s,background-color .15s}
+.num small{font:500 11px/1 var(--f-body);color:var(--muted);white-space:nowrap}
+.num:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 var(--edge)}
+.num:disabled{opacity:.42;cursor:default;transform:translateY(3px);box-shadow:0 2px 0 var(--edge)}
+.num.ok,.num.ok:disabled{opacity:1;background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)}
+.num.bad,.num.bad:disabled{opacity:1;background:var(--bad-bg);border-color:var(--bad);color:var(--bad-ink)}
+
+/* Butang tindakan */
+.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.act{font-weight:600;font-size:14px;line-height:1.2;background:var(--card);border:2px solid var(--thin);border-radius:12px;padding:12px 6px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
+.act:hover{border-color:var(--edge)}
+.act svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.act.primary{background:var(--pen);border-color:var(--pen);color:var(--pen-ink)}
+
+/* Kotak cara main */
+.rules{background:var(--card);border:2px dashed var(--thin);border-radius:16px;padding:16px 18px}
+.rules h2{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1.2;margin:0 0 10px}
+.rules ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:4px 11px 4px 5px;border-radius:999px;border:2px solid}
+.chip i{width:15px;height:15px;border-radius:4px;background:currentColor;opacity:.85}
+.chip.ok{border-color:var(--ok);background:var(--ok-bg);color:var(--ok-ink)}
+.chip.bad{border-color:var(--bad);background:var(--bad-bg);color:var(--bad-ink)}
+.chip.sel{border-color:var(--sel);background:var(--hl);color:var(--ink)}
+.chip.sel i{background:var(--sel)}
+.chip.pen{border-color:var(--pen);background:var(--same);color:var(--ink)}
+.chip.pen i{background:var(--pen)}
+.kbd-tip{display:none;margin:14px 0 0;font-size:13px;color:var(--muted)}
+@media (hover:hover) and (pointer:fine){.kbd-tip{display:block}}
+kbd{font:600 12px/1.4 var(--f-body);border:1.5px solid var(--thin);border-bottom-width:3px;border-radius:6px;padding:0 6px;background:var(--paper);color:var(--ink)}
+
+/* Skrin menang / keputusan */
+.win{position:absolute;inset:-6px;background:var(--veil);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px;animation:rise .35s ease-out}
+.win h2{font-family:var(--f-display);font-weight:800;font-size:clamp(36px,9vw,52px);margin:0;line-height:1}
+.win p{margin:0;color:var(--muted);max-width:30ch}
+.stars{display:flex;gap:6px;margin-bottom:4px}
+.stars svg{width:46px;height:46px;fill:var(--thin);stroke:var(--edge);stroke-width:1.2;stroke-linejoin:round}
+.stars svg.on{fill:var(--tag-bg);animation:pop .4s ease-out both}
+.stars svg.on:nth-child(2){animation-delay:.15s}
+.stars svg.on:nth-child(3){animation-delay:.3s}
+.win-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:8px}
+.win-actions .act{padding-inline:16px}
+
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes wave{0%,100%{transform:translateY(0) scale(1)}45%{transform:translateY(-10px) scale(1.06)}}
+@keyframes rise{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.pop{animation:pop .3s ease-out}
+.shake{animation:shake .4s ease-in-out}
+.wave{animation:wave .55s ease-in-out both}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ---------- Game jenis kuiz (assets/quiz.js): bulatan kemajuan, butang seterusnya, panel keputusan ---------- */
+.q-sheet{padding:16px 16px 22px}
+.dots{display:flex;justify-content:center;flex-wrap:wrap;gap:6px}
+.dots i{width:13px;height:13px;border-radius:50%;background:var(--box);border:2px solid var(--thin);transition:background-color .2s,border-color .2s}
+.dots i.cur{border-color:var(--sel);background:var(--hl);transform:scale(1.15)}
+.dots i.ok{background:var(--ok);border-color:var(--ok)}
+.dots i.bad{background:var(--bad);border-color:var(--bad)}
+.next{width:100%;font-size:17px;padding:15px 12px;border-radius:14px;box-shadow:0 4px 0 var(--edge);border:2px solid var(--edge)!important}
+.next:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.next svg{width:20px;height:20px}
+.result{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:18px 6px 4px;animation:rise .35s ease-out}
+.result h2{font-family:var(--f-display);font-weight:800;font-size:clamp(34px,8vw,48px);margin:0;line-height:1}
+.result > p{margin:0;color:var(--muted)}
+.review{width:100%;margin:8px 0 0;padding:12px 14px;background:var(--box);border-radius:14px;text-align:left}
+.review h3{margin:0 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.review ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.review li{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px}
+.review b{font-family:var(--f-display);font-weight:800;font-size:19px}
+.review small{color:var(--bad-ink);font-size:13px}

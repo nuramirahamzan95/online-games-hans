@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Belajar baca jam analog. Tengok jarum jam dan pilih pukul berapa.">
+<meta name="theme-color" content="#F3F7FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161C26" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<title>Baca Jam · Main Nombor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Lexend:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../assets/common.css">
+<style>
+.clock-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0 4px}
+.clock{width:min(100%,300px);height:auto;display:block;overflow:visible}
+.clock .face{fill:var(--card);stroke:var(--edge);stroke-width:5}
+.clock .rim{fill:var(--box)}
+.clock .tick{stroke:var(--thin);stroke-width:1.6;stroke-linecap:round}
+.clock .tick.big{stroke:var(--ink);stroke-width:3.6}
+.clock .hr-num{fill:var(--ink);font-family:var(--f-display);font-weight:800;font-size:21px;text-anchor:middle;dominant-baseline:central}
+.clock .min-num{fill:var(--muted);font-family:var(--f-body);font-weight:600;font-size:10px;text-anchor:middle;dominant-baseline:central}
+.clock .hand{stroke-linecap:round;transition:transform .7s cubic-bezier(.3,.7,.3,1)}
+.clock .hand.h{stroke:var(--ink);stroke-width:10}
+.clock .hand.m{stroke:var(--pen);stroke-width:6}
+.clock .pin{fill:var(--sel);stroke:var(--edge);stroke-width:2}
+.clock.mins-off .min-num{display:none}
+.say{font-weight:600;background:var(--ok-bg);color:var(--ok-ink);border:2px solid var(--ok);border-radius:999px;padding:4px 14px;text-align:center}
+.say.bad{background:var(--box);color:var(--ink);border-color:var(--thin)}
+
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.choices .num{font-size:40px;padding:18px 0 15px;font-variant-numeric:tabular-nums}
+.restart{width:100%}
+.chip.hh{border-color:var(--edge);background:var(--box);color:var(--ink)}
+.chip.hh i{background:var(--ink);height:6px;width:16px;border-radius:3px}
+.chip.mm{border-color:var(--pen);background:var(--same);color:var(--ink)}
+.chip.mm i{background:var(--pen);height:4px;width:22px;border-radius:2px}
+.lvl small{font-size:11px;font-weight:500;opacity:.75}
+@media (max-width:780px){.play{gap:18px}.clock{width:min(100%,250px)}}
+@media (max-width:560px){.lvl small{display:none}}
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a>
+
+  <header class="top">
+    <div class="brand">
+      <h1>Baca Jam <span class="tag">masa</span></h1>
+      <p>Tengok jarum jam, kemudian pilih pukul berapa. 10 soalan setiap pusingan.</p>
+    </div>
+    <div class="levels" role="group" aria-label="Pilih level">
+      <button type="button" class="lvl" id="lvl-mudah" data-level="mudah">Mudah<small>tepat jam</small></button>
+      <button type="button" class="lvl" id="lvl-sederhana" data-level="sederhana">Sederhana<small>suku, setengah</small></button>
+      <button type="button" class="lvl" id="lvl-sukar" data-level="sukar">Sukar<small>setiap 5 minit</small></button>
+    </div>
+  </header>
+
+  <section class="play">
+    <div class="board-col">
+      <div class="stats">
+        <div class="stat"><span>Soalan</span><b id="st-q">1/10</b></div>
+        <div class="stat"><span>Betul</span><b id="st-ok">0</b></div>
+        <div class="stat"><span>Masa</span><b id="st-time">00:00</b></div>
+      </div>
+      <div class="sheet q-sheet">
+        <div class="dots" id="dots" role="img"></div>
+        <div id="q-area">
+          <div class="clock-wrap">
+            <svg class="clock" id="clock" viewBox="-122 -122 244 244" role="img" aria-label="Jam">
+              <circle class="face" r="104"/>
+              <g id="ticks"></g>
+              <line class="hand h" id="hand-h" x1="0" y1="10" x2="0" y2="-50"/>
+              <line class="hand m" id="hand-m" x1="0" y1="14" x2="0" y2="-80"/>
+              <circle class="pin" r="8"/>
+            </svg>
+            <div class="say" id="say" hidden></div>
+          </div>
+        </div>
+        <div class="result" id="result" hidden>
+          <div class="stars" id="stars" aria-hidden="true"></div>
+          <h2 id="res-title">Tahniah!</h2>
+          <p id="res-text"></p>
+          <div class="review" id="res-list"></div>
+          <div class="win-actions">
+            <button type="button" class="act primary" id="again">Main lagi</button>
+            <button type="button" class="act" id="up" hidden></button>
+          </div>
+        </div>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <aside class="side">
+      <div id="pad-wrap">
+        <p class="label">Pukul berapa?</p>
+        <div class="choices" id="choices"></div>
+      </div>
+      <button type="button" class="act primary next" id="next" hidden><span>Seterusnya</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>Mula semula</button>
+      <div class="rules">
+        <h2>Cara main</h2>
+        <ol>
+          <li><b>Jarum pendek</b> tunjuk jam. Kalau jarum pendek di antara dua nombor, ambil nombor yang baru dilepasi.</li>
+          <li><b>Jarum panjang</b> tunjuk minit. Setiap nombor = 5 minit. Nombor 12 = 00, nombor 3 = 15, nombor 6 = 30.</li>
+          <li>Pilih jawapan yang betul daripada empat pilihan.</li>
+        </ol>
+        <div class="legend">
+          <span class="chip hh"><i></i>Jarum pendek = jam</span>
+          <span class="chip mm"><i></i>Jarum panjang = minit</span>
+        </div>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script src="../../assets/common.js"></script>
+<script src="../../assets/quiz.js"></script>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const r=OG.rand;
+const LEVELS={
+  mudah:    {label:'Mudah',ok:m=>m===0},
+  sederhana:{label:'Sederhana',ok:m=>m%15===0},
+  sukar:    {label:'Sukar',ok:m=>m%5===0}
+};
+const ORDER=['mudah','sederhana','sukar'];
+let level=OG.get('baca-jam:level','mudah');
+if(!LEVELS[level])level='mudah';
+
+/* ===== Lukis muka jam ===== */
+const NS='http://www.w3.org/2000/svg';
+(function drawFace(){
+  const g=$('ticks');
+  const el=(tag,attrs,text)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;g.appendChild(e);};
+  for(let k=0;k<60;k++){
+    const a=k*Math.PI/30,big=k%5===0,r1=big?84:90,r2=96;
+    el('line',{class:'tick'+(big?' big':''),x1:Math.sin(a)*r1,y1:-Math.cos(a)*r1,x2:Math.sin(a)*r2,y2:-Math.cos(a)*r2});
+  }
+  for(let h=1;h<=12;h++){
+    const a=h*Math.PI/6;
+    el('text',{class:'hr-num',x:Math.sin(a)*68,y:-Math.cos(a)*68},h);
+    el('text',{class:'min-num',x:Math.sin(a)*114,y:-Math.cos(a)*114},String(h*5%60).padStart(2,'0'));
+  }
+})();
+
+/* Jarum sentiasa pusing ke depan (ikut arah jam) */
+const deg={h:0,m:0};
+function turn(id,target){
+  const cur=deg[id],diff=((target-cur)%360+360)%360;
+  deg[id]=cur+diff;
+  $('hand-'+id).style.transform=`rotate(${deg[id]}deg)`;
+}
+
+/* ===== Masa dalam perkataan ===== */
+const NUM=['','satu','dua','tiga','empat','lima','enam','tujuh','lapan','sembilan','sepuluh','sebelas','dua belas'];
+const nextH=h=>h%12+1;
+function minWords(m){
+  if(m<10)return NUM[m];
+  if(m===10)return 'sepuluh';
+  if(m<20)return m===11?'sebelas':NUM[m-10]+' belas';
+  const t=Math.floor(m/10),o=m%10;
+  return NUM[t]+' puluh'+(o?' '+NUM[o]:'');
+}
+function words(h,m){
+  if(m===0)return `pukul ${NUM[h]}`;
+  if(m===15)return `pukul ${NUM[h]} suku`;
+  if(m===30)return `pukul ${NUM[h]} setengah`;
+  if(m===45)return `pukul ${NUM[nextH(h)]} kurang suku`;
+  return `pukul ${NUM[h]} ${minWords(m)} minit`;
+}
+const fmt=(h,m)=>`${h}:${String(m).padStart(2,'0')}`;
+const norm=h=>((h-1)%12+12)%12+1;
+
+/* ===== Soalan ===== */
+function make(lv){
+  const h=r(1,12);
+  const m=lv==='mudah'?0:lv==='sederhana'?OG.pick([0,15,30,45,15,30,45]):r(0,11)*5;
+  return {key:fmt(h,m),h,m,answer:fmt(h,m),lv};
+}
+
+function choicesFor(q){
+  const ok=LEVELS[q.lv].ok,set=new Set([q.answer]);
+  const c=[];
+  const add=(h,m)=>{m=((m%60)+60)%60;if(ok(m))c.push(fmt(norm(h),m));};
+  add(q.m===0?12:q.m/5,(q.h%12)*5);          // jarum tertukar
+  add(q.h+1,q.m);add(q.h-1,q.m);              // salah jam
+  if(q.lv==='mudah'){add(q.h+2,0);add(q.h-2,0);add(q.h+6,0);}
+  else{
+    const step=q.lv==='sederhana'?15:5;
+    add(q.h,q.m+step);add(q.h,q.m-step);add(q.h,q.m+30);add(q.h+1,q.m+step);
+  }
+  for(const v of OG.shuffle(c)){if(set.size>=4)break;set.add(v);}
+  while(set.size<4){const m=q.lv==='mudah'?0:q.lv==='sederhana'?OG.pick([0,15,30,45]):r(0,11)*5;set.add(fmt(r(1,12),m));}
+  return OG.shuffle([...set]);
+}
+
+function show(q){
+  $('pad-wrap').hidden=false;
+  $('say').hidden=true;
+  turn('h',(q.h%12)*30+q.m*.5);
+  turn('m',q.m*6);
+  $('clock').setAttribute('aria-label','Jam analog. Jarum pendek dan jarum panjang. Pukul berapa?');
+  const box=$('choices');box.innerHTML='';
+  choicesFor(q).forEach(v=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='num';b.textContent=v;b.dataset.v=v;
+    b.addEventListener('click',()=>quiz.submit(v));
+    box.appendChild(b);
+  });
+}
+
+function reveal(q,given,ok){
+  $('choices').querySelectorAll('.num').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.v===q.answer)b.classList.add('ok');else if(b.dataset.v===given)b.classList.add('bad');
+  });
+  const s=$('say');
+  s.hidden=false;s.className='say'+(ok?'':' bad');
+  s.textContent=`${q.answer} · ${words(q.h,q.m)}`;
+  OG.flash(s,'pop');
+}
+
+const quiz=OG.quiz({
+  game:'baca-jam',total:10,delay:1400,
+  make,show,reveal,
+  prompt:()=>'Tengok jarum jam. Pukul berapa?',
+  praise:q=>`${OG.praise()} Pukul ${q.answer}.`,
+  explain:q=>`Belum betul. Jam ini pukul ${q.answer} (${words(q.h,q.m)}).`,
+  review:(q,given)=>({sum:`${q.answer} · ${words(q.h,q.m)}`,note:`kamu pilih ${given}`}),
+  nextLevel:l=>{const i=ORDER.indexOf(l);return i<ORDER.length-1?{id:ORDER[i+1],label:'level '+LEVELS[ORDER[i+1]].label}:null;},
+  onUp:id=>setLevel(id),
+  onFinish:()=>{$('pad-wrap').hidden=true;}
+});
+
+function setLevel(l){
+  level=l;OG.set('baca-jam:level',l);
+  ORDER.forEach(x=>$('lvl-'+x).setAttribute('aria-pressed',String(x===l)));
+  $('clock').classList.toggle('mins-off',l==='mudah');
+  quiz.start(l);
+}
+document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>setLevel(b.dataset.level)));
+$('restart').addEventListener('click',()=>quiz.start(level));
+setLevel(level);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Bandingkan dua nombor. Pilih tanda lebih besar, lebih kecil atau sama.">
+<meta name="theme-color" content="#F3F7FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161C26" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<title>Banding Nombor · Main Nombor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Lexend:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../assets/common.css">
+<style>
+.q-sheet{container-type:inline-size}
+.cmp{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:start;gap:4cqi;padding:26px 2px 18px}
+.side-n{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
+.tile{width:100%;display:grid;place-items:center;aspect-ratio:1.1;background:var(--box);border:3px solid var(--thin);border-radius:18px;font-family:var(--f-display);font-weight:800;font-size:clamp(40px,17cqi,84px);line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tile.expr{font-size:clamp(24px,8.5cqi,42px);color:var(--ink)}
+.tile.expr .op{color:var(--pen)}
+.mid{align-self:center;width:clamp(56px,17cqi,84px);aspect-ratio:1;border-radius:50%;border:3px dashed var(--sel);background:var(--hl-soft);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:clamp(34px,11cqi,54px);line-height:1;color:var(--muted)}
+.mid.ok{border:3px solid var(--ok);background:var(--ok-bg);color:var(--ok-ink)}
+.mid.bad{border:3px solid var(--bad);background:var(--bad-bg);color:var(--bad-ink)}
+.frame{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;width:min(100%,120px);padding:5px;border:2px solid var(--thin);border-radius:9px;background:var(--box)}
+.frame i{aspect-ratio:1;border-radius:50%}
+.frame i:not(.on):not(.gone){box-shadow:inset 0 0 0 1.5px var(--thin)}
+.frame i.on{background:var(--pen)}
+.fix{display:flex;justify-content:center;margin:0 0 6px;text-align:center}
+.fix span{font-weight:600;background:var(--ok-bg);color:var(--ok-ink);border:2px solid var(--ok);border-radius:999px;padding:4px 14px}
+
+.signs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.signs .num{font-size:52px;padding:14px 0 12px}
+.signs .num small{font-size:12px}
+.restart{width:100%}
+@media (max-width:780px){.play{gap:18px}}
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a>
+
+  <header class="top">
+    <div class="brand">
+      <h1>Banding Nombor <span class="tag">&lt; = &gt;</span></h1>
+      <p>Mana lebih besar? Pilih tanda yang betul untuk 10 soalan.</p>
+    </div>
+    <div class="levels" role="group" aria-label="Pilih level">
+      <button type="button" class="lvl" id="lvl-mudah" data-level="mudah">Mudah<span class="pips"><i class="on"></i><i></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sederhana" data-level="sederhana">Sederhana<span class="pips"><i class="on"></i><i class="on"></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sukar" data-level="sukar">Sukar<span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span></button>
+    </div>
+  </header>
+
+  <section class="play">
+    <div class="board-col">
+      <div class="stats">
+        <div class="stat"><span>Soalan</span><b id="st-q">1/10</b></div>
+        <div class="stat"><span>Betul</span><b id="st-ok">0</b></div>
+        <div class="stat"><span>Masa</span><b id="st-time">00:00</b></div>
+      </div>
+      <div class="sheet q-sheet">
+        <div class="dots" id="dots" role="img"></div>
+        <div id="q-area">
+          <div class="cmp" id="cmp" aria-live="polite"></div>
+          <div class="fix" id="fix" hidden><span></span></div>
+        </div>
+        <div class="result" id="result" hidden>
+          <div class="stars" id="stars" aria-hidden="true"></div>
+          <h2 id="res-title">Tahniah!</h2>
+          <p id="res-text"></p>
+          <div class="review" id="res-list"></div>
+          <div class="win-actions">
+            <button type="button" class="act primary" id="again">Main lagi</button>
+            <button type="button" class="act" id="up" hidden></button>
+          </div>
+        </div>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <aside class="side">
+      <div id="pad-wrap">
+        <p class="label">Pilih tanda</p>
+        <div class="signs" id="signs">
+          <button type="button" class="num" data-v="&lt;" aria-label="Kurang daripada">&lt;<small>kurang</small></button>
+          <button type="button" class="num" data-v="=" aria-label="Sama dengan">=<small>sama</small></button>
+          <button type="button" class="num" data-v="&gt;" aria-label="Lebih daripada">&gt;<small>lebih</small></button>
+        </div>
+      </div>
+      <button type="button" class="act primary next" id="next" hidden><span>Seterusnya</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <button type="button" class="act restart" id="restart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>Mula semula</button>
+      <div class="rules">
+        <h2>Cara main</h2>
+        <ol>
+          <li>Bandingkan nombor kiri dengan nombor kanan.</li>
+          <li><b>&gt;</b> bermaksud kiri lebih besar. <b>&lt;</b> bermaksud kiri lebih kecil. <b>=</b> bermaksud sama.</li>
+          <li>Petua: tanda macam mulut buaya. Mulut yang terbuka sentiasa menghadap nombor yang lebih besar.</li>
+          <li>Level Sukar: kira dulu, kemudian banding.</li>
+        </ol>
+        <p class="kbd-tip">Papan kekunci: <kbd>&lt;</kbd> atau <kbd>←</kbd>, <kbd>=</kbd>, <kbd>&gt;</kbd> atau <kbd>→</kbd>. <kbd>Enter</kbd> untuk seterusnya.</p>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script src="../../assets/common.js"></script>
+<script src="../../assets/quiz.js"></script>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const r=OG.rand;
+const LEVELS={
+  mudah:{label:'Mudah'},      // 1–10 dengan titik
+  sederhana:{label:'Sederhana'}, // 1–20
+  sukar:{label:'Sukar'}       // ayat tambah/tolak lawan nombor
+};
+const ORDER=['mudah','sederhana','sukar'];
+const WORD={'<':'kurang daripada','>':'lebih daripada','=':'sama dengan'};
+let level=OG.get('banding-nombor:level','mudah');
+if(!LEVELS[level])level='mudah';
+
+const sign=(x,y)=>x<y?'<':x>y?'>':'=';
+
+function make(lv){
+  const eq=Math.random()<.2;
+  if(lv!=='sukar'){
+    const max=lv==='mudah'?10:20;
+    const a=r(1,max);let b=eq?a:r(1,max);
+    if(!eq&&b===a)b=a===max?a-1:a+1;
+    return {key:`${a}|${b}`,L:{v:a,t:String(a)},R:{v:b,t:String(b)},answer:sign(a,b),dots:lv==='mudah'};
+  }
+  // Sukar: satu sisi ialah ayat matematik (hingga 20)
+  let x,y,op,v;
+  if(Math.random()<.6){v=r(3,20);x=r(1,v-1);y=v-x;op='+';}
+  else{x=r(3,20);y=r(1,x-1);v=x-y;op='−';}
+  const n=eq?v:Math.max(0,v+OG.pick([-3,-2,-1,1,2,3]));
+  const expr={v,t:`${x} <span class="op">${op}</span> ${y}`,plain:`${x} ${op} ${y}`,expr:true};
+  const num={v:n,t:String(n)};
+  const [L,R]=Math.random()<.5?[expr,num]:[num,expr];
+  return {key:`${L.plain||L.t}|${R.plain||R.t}`,L,R,answer:sign(L.v,R.v),dots:false};
+}
+
+function frame(n){
+  let h='<div class="frame" aria-hidden="true">';
+  for(let k=0;k<10;k++)h+=`<i class="${k<n?'on':''}"></i>`;
+  return h+'</div>';
+}
+const plain=s=>s.plain||s.t;
+
+function show(q){
+  $('pad-wrap').hidden=false;$('fix').hidden=true;
+  const side=s=>`<div class="side-n"><div class="tile${s.expr?' expr':''}"><span>${s.t}</span></div>${q.dots?frame(s.v):''}</div>`;
+  $('cmp').innerHTML=side(q.L)+'<div class="mid" id="mid">?</div>'+side(q.R);
+  $('cmp').setAttribute('aria-label',`${plain(q.L)} berbanding ${plain(q.R)}`);
+  $('signs').querySelectorAll('.num').forEach(b=>{b.disabled=false;b.classList.remove('ok','bad');});
+}
+
+function reveal(q,given,ok){
+  const m=$('mid');
+  m.textContent=given;m.className='mid '+(ok?'ok':'bad');
+  OG.flash(m,ok?'pop':'shake');
+  $('signs').querySelectorAll('.num').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.v===q.answer)b.classList.add('ok');else if(b.dataset.v===given)b.classList.add('bad');
+  });
+  if(!ok){$('fix').hidden=false;$('fix').querySelector('span').textContent=`Jawapan betul: ${plain(q.L)} ${q.answer} ${plain(q.R)}`;}
+}
+
+function explain(q){
+  const L=q.L,R=q.R;
+  const calc=[L,R].filter(s=>s.expr).map(s=>`${s.plain} = ${s.v}. `).join('');
+  return `Belum betul. ${calc}${L.v} ${WORD[q.answer]} ${R.v}.`;
+}
+
+const quiz=OG.quiz({
+  game:'banding-nombor',total:10,
+  make,show,reveal,explain,
+  prompt:q=>q.L.expr||q.R.expr?'Kira dulu, kemudian banding.':'Mana lebih besar?',
+  praise:q=>`${OG.praise()} ${plain(q.L)} ${WORD[q.answer]} ${plain(q.R)}.`,
+  review:(q,given)=>({sum:`${plain(q.L)} ${q.answer} ${plain(q.R)}`,note:`kamu pilih ${given}`}),
+  nextLevel:l=>{const i=ORDER.indexOf(l);return i<ORDER.length-1?{id:ORDER[i+1],label:'level '+LEVELS[ORDER[i+1]].label}:null;},
+  onUp:id=>setLevel(id),
+  onFinish:()=>{$('pad-wrap').hidden=true;}
+});
+
+$('signs').querySelectorAll('.num').forEach(b=>b.addEventListener('click',()=>quiz.submit(b.dataset.v)));
+
+function setLevel(l){
+  level=l;OG.set('banding-nombor:level',l);
+  ORDER.forEach(x=>$('lvl-'+x).setAttribute('aria-pressed',String(x===l)));
+  quiz.start(l);
+}
+document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>setLevel(b.dataset.level)));
+$('restart').addEventListener('click',()=>quiz.start(level));
+
+document.addEventListener('keydown',e=>{
+  if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey)return;
+  const map={'<':'<',',':'<',ArrowLeft:'<','=':'=','>':'>','.':'>',ArrowRight:'>'};
+  if(map[e.key]){e.preventDefault();quiz.submit(map[e.key]);}
+});
+
+setLevel(level);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Sudoku 4x4 untuk kanak-kanak. Nombor 1 hingga 4, tiga level.">
+<meta name="theme-color" content="#F3F7FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161C26" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%231C2A4D%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%2210%22%20height%3D%2210%22%20rx%3D%222.5%22%20fill%3D%22%23FFD24A%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%225%22%20width%3D%2210%22%20height%3D%2210%22%20rx%3D%222.5%22%20fill%3D%22%23D4F1E0%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2217%22%20width%3D%2210%22%20height%3D%2210%22%20rx%3D%222.5%22%20fill%3D%22%23D4F1E0%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2217%22%20width%3D%2210%22%20height%3D%2210%22%20rx%3D%222.5%22%20fill%3D%22%23FFFFFF%22%2F%3E%3C%2Fsvg%3E">
+<title>Sudoku Mini 4×4 · Main Nombor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Lexend:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../assets/common.css">
+<style>
+/* Style khusus Sudoku. Token warna, header, butang, skrin menang: ../../assets/common.css */
+.board-shell{position:relative}
+.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:8px;background:var(--card);border:3px solid var(--edge);border-radius:22px;box-shadow:4px 6px 0 var(--edge)}
+.box{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:6px;background:var(--box);border-radius:15px}
+.cell{position:relative;aspect-ratio:1;width:100%;padding:0;border:2px solid var(--thin);border-radius:11px;background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:clamp(30px,9vw,46px);line-height:1;display:grid;place-items:center;cursor:pointer;transition:background-color .15s,border-color .15s;-webkit-tap-highlight-color:transparent}
+.cell.given{cursor:default}
+.cell.peer{background:var(--hl-soft)}
+.cell.same{background:var(--same)}
+.cell.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)}
+.cell.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--bad-ink)}
+.cell.sel{border-color:var(--sel);box-shadow:0 0 0 3px var(--sel)}
+.cell.sel:not(.ok):not(.bad){background:var(--hl)}
+.cell.hinted::after{content:"";position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--ok)}
+@media (hover:hover){.cell:not(.given):not(.ok):not(.sel):hover{border-color:var(--pen)}}
+.pad{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a>
+  <header class="top">
+    <div class="brand">
+      <h1>Sudoku Mini <span class="tag">4×4</span></h1>
+      <p>Isi setiap kotak dengan nombor 1 hingga 4. Kotak jadi hijau kalau betul, merah kalau salah.</p>
+    </div>
+    <div class="levels" role="group" aria-label="Pilih level">
+      <button type="button" class="lvl" id="lvl-mudah" data-level="mudah">Mudah<span class="pips"><i class="on"></i><i></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sederhana" data-level="sederhana">Sederhana<span class="pips"><i class="on"></i><i class="on"></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sukar" data-level="sukar">Sukar<span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span></button>
+    </div>
+  </header>
+
+  <section class="play">
+    <div class="board-col">
+      <div class="stats">
+        <div class="stat"><span>Tinggal</span><b id="st-left">0</b></div>
+        <div class="stat" id="st-mist-box"><span>Salah</span><b id="st-mist">0</b></div>
+        <div class="stat"><span>Masa</span><b id="st-time">00:00</b></div>
+      </div>
+      <div class="board-shell">
+        <div class="board" id="board" role="group" aria-label="Papan Sudoku 4 kali 4"></div>
+        <div class="win" id="win" hidden>
+          <div class="stars" id="stars" aria-hidden="true"></div>
+          <h2>Tahniah!</h2>
+          <p id="win-text"></p>
+          <div class="win-actions">
+            <button type="button" class="act primary" id="again">Main lagi</button>
+            <button type="button" class="act" id="next" hidden></button>
+          </div>
+        </div>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <aside class="side">
+      <div>
+        <p class="label">Pilih nombor</p>
+        <div class="pad" id="pad"></div>
+      </div>
+      <div class="actions">
+        <button type="button" class="act" id="erase"><svg viewBox="0 0 24 24"><path d="M20 20H9L4 15a2 2 0 0 1 0-2.8l8.2-8.2a2 2 0 0 1 2.8 0l5 5a2 2 0 0 1 0 2.8L13 19"/><path d="M8 11l6 6"/></svg>Padam</button>
+        <button type="button" class="act" id="hint"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>Petunjuk</button>
+        <button type="button" class="act primary" id="new"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>Soalan baru</button>
+      </div>
+      <div class="rules">
+        <h2>Cara main</h2>
+        <ol>
+          <li>Tekan satu kotak kosong, kemudian tekan nombor 1, 2, 3 atau 4.</li>
+          <li>Setiap baris, lajur dan petak 2×2 mesti ada nombor 1, 2, 3 dan 4. Setiap nombor sekali sahaja.</li>
+          <li>Kotak merah boleh ditukar. Cuba nombor lain sampai jadi hijau.</li>
+        </ol>
+        <div class="legend">
+          <span class="chip ok"><i></i>Betul</span>
+          <span class="chip bad"><i></i>Salah, cuba lagi</span>
+          <span class="chip sel"><i></i>Kotak dipilih</span>
+        </div>
+        <p class="kbd-tip">Papan kekunci: <kbd>1</kbd>–<kbd>4</kbd> isi nombor, <kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd> gerak, <kbd>Backspace</kbd> padam.</p>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script src="../../assets/common.js"></script>
+<script>
+(() => {
+/* GEN START */
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function makeSolution(){
+  const base=(r,c)=>(2*(r%2)+Math.floor(r/2)+c)%4;
+  const rows=[],cols=[];
+  shuffle([0,1]).forEach(b=>shuffle([0,1]).forEach(k=>rows.push(b*2+k)));
+  shuffle([0,1]).forEach(s=>shuffle([0,1]).forEach(k=>cols.push(s*2+k)));
+  const digits=shuffle([1,2,3,4]);
+  const flip=Math.random()<0.5;
+  const g=[];
+  for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+    const rr=rows[r],cc=cols[c];
+    g.push(digits[flip?base(cc,rr):base(rr,cc)]);
+  }
+  return g;
+}
+
+function countSolutions(g,limit=2){
+  const a=g.slice();let count=0;
+  const fits=(i,v)=>{
+    const r=i>>2,c=i&3;
+    for(let k=0;k<4;k++){if(a[r*4+k]===v||a[k*4+c]===v)return false;}
+    const br=r-(r%2),bc=c-(c%2);
+    for(let dr=0;dr<2;dr++)for(let dc=0;dc<2;dc++){if(a[(br+dr)*4+bc+dc]===v)return false;}
+    return true;
+  };
+  const solve=()=>{
+    const i=a.indexOf(0);
+    if(i<0){count++;return count>=limit;}
+    for(let v=1;v<=4;v++){
+      if(fits(i,v)){a[i]=v;if(solve()){a[i]=0;return true;}a[i]=0;}
+    }
+    return false;
+  };
+  solve();return count;
+}
+
+function makePuzzle(givens){
+  let best=null;
+  for(let attempt=0;attempt<80;attempt++){
+    const solution=makeSolution(),puzzle=solution.slice();
+    let filled=16;
+    for(const i of shuffle([...Array(16).keys()])){
+      if(filled<=givens)break;
+      const keep=puzzle[i];puzzle[i]=0;
+      if(countSolutions(puzzle)!==1)puzzle[i]=keep;else filled--;
+    }
+    if(!best||filled<best.filled)best={puzzle,solution,filled};
+    if(filled===givens)break;
+  }
+  return best;
+}
+/* GEN END */
+
+const LEVELS={
+  mudah:{label:'Mudah',givens:10},
+  sederhana:{label:'Sederhana',givens:7},
+  sukar:{label:'Sukar',givens:5}
+};
+const ORDER=['mudah','sederhana','sukar'];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const boardEl=$('board'),padEl=$('pad'),statusEl=$('status'),winEl=$('win');
+const cells=[],nums=[];
+let S=null,startedAt=0,winTimer=null;
+
+/* Build board: 4 boxes of 2x2 cells */
+for(let b=0;b<4;b++){
+  const box=document.createElement('div');box.className='box';
+  const br=b>>1,bc=b&1;
+  for(let k=0;k<4;k++){
+    const r=br*2+(k>>1),c=bc*2+(k&1),i=r*4+c;
+    const el=document.createElement('button');
+    el.type='button';el.className='cell';el.id='cell-'+i;
+    el.addEventListener('click',()=>select(i));
+    cells[i]=el;box.appendChild(el);
+  }
+  boardEl.appendChild(box);
+}
+/* Number pad */
+for(let n=1;n<=4;n++){
+  const el=document.createElement('button');
+  el.type='button';el.className='num';el.id='num-'+n;
+  el.innerHTML=n+'<small></small>';
+  el.addEventListener('click',()=>input(n));
+  nums[n]=el;padEl.appendChild(el);
+}
+
+const valueAt=i=>S.puzzle[i]||S.entries[i];
+const isGiven=i=>S.puzzle[i]>0;
+const isOk=i=>!isGiven(i)&&S.entries[i]>0&&S.entries[i]===S.solution[i];
+const isBad=i=>!isGiven(i)&&S.entries[i]>0&&S.entries[i]!==S.solution[i];
+const isSolved=i=>isGiven(i)||isOk(i);
+const elapsed=()=>S.done?S.elapsed:Math.floor((Date.now()-startedAt)/1000);
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+function say(msg,tone){
+  statusEl.textContent=msg;
+  statusEl.className='status'+(tone?' '+tone:'');
+}
+
+function flash(i,cls){
+  const el=cells[i];
+  el.classList.remove('pop','shake','wave');
+  void el.offsetWidth;
+  el.classList.add(cls);
+}
+
+function newGame(level){
+  const {puzzle,solution}=makePuzzle(LEVELS[level].givens);
+  S={level,puzzle,solution,entries:Array(16).fill(0),sel:-1,mistakes:0,hints:0,hinted:[],elapsed:0,done:false};
+  startedAt=Date.now();
+  clearTimeout(winTimer);winEl.hidden=true;
+  cells.forEach(el=>el.style.animationDelay='');
+  const empty=puzzle.filter(v=>!v).length;
+  say(`Level ${LEVELS[level].label}: ${empty} kotak kosong. Tekan satu kotak untuk mula.`);
+  render();
+}
+
+function select(i,focus){
+  if(S.done)return;
+  S.sel=i;render();
+  if(focus)cells[i].focus();
+}
+
+function input(v){
+  if(S.done)return;
+  const i=S.sel;
+  if(i<0){say('Tekan satu kotak kosong dulu.');return;}
+  if(isGiven(i)){say('Nombor ini dari soalan. Pilih kotak kosong.');return;}
+  if(isOk(i)){say('Kotak ini sudah betul. Pilih kotak lain.');return;}
+  S.entries[i]=v;
+  if(v===S.solution[i]){
+    say(pick(['Betul!','Pandai!','Bagus, betul!','Hebat!']),'good');
+    render();flash(i,'pop');checkWin();
+  }else{
+    S.mistakes++;
+    say(`Salah. Nombor ${v} tak boleh di situ, cuba nombor lain.`,'oops');
+    render();flash(i,'shake');
+  }
+}
+
+function erase(){
+  if(S.done)return;
+  const i=S.sel;
+  if(i<0){say('Tekan kotak yang hendak dipadam.');return;}
+  if(isGiven(i)){say('Nombor soalan tak boleh dipadam.');return;}
+  if(isOk(i)){say('Nombor ini sudah betul, tak perlu padam.');return;}
+  if(!S.entries[i])return;
+  S.entries[i]=0;say('Kotak dikosongkan.');render();
+}
+
+function hint(){
+  if(S.done)return;
+  let i=S.sel;
+  if(i<0||isSolved(i)){
+    const open=[...Array(16).keys()].filter(k=>!isSolved(k));
+    if(!open.length)return;
+    i=pick(open);
+  }
+  S.entries[i]=S.solution[i];S.hints++;S.hinted.push(i);S.sel=i;
+  say(`Petunjuk: nombor ${S.solution[i]} masuk di sini.`,'good');
+  render();flash(i,'pop');checkWin();
+}
+
+function stars(){const p=S.mistakes+S.hints;return p===0?3:p<=2?2:1;}
+
+function checkWin(){
+  if(!cells.every((_,i)=>isSolved(i)))return;
+  S.elapsed=Math.floor((Date.now()-startedAt)/1000);
+  S.done=true;S.sel=-1;render();
+  window.OG&&OG.saveBest('sudoku-4x4',stars());
+  say('Tahniah! Semua kotak betul.','good');
+  cells.forEach((el,i)=>{el.style.animationDelay=((i>>2)+(i&3))*70+'ms';flash(i,'wave');});
+  winTimer=setTimeout(()=>showWin(true),reduce?0:950);
+}
+
+const STAR='<svg viewBox="0 0 24 24"><path d="M12 2.6l2.85 6 6.55.78-4.85 4.55 1.28 6.5L12 17.2l-5.83 3.23 1.28-6.5L2.6 9.38l6.55-.78z"/></svg>';
+function showWin(focus){
+  const s=stars();
+  $('stars').innerHTML=[0,1,2].map(k=>STAR.replace('<svg','<svg class="'+(k<s?'on':'')+'"')).join('');
+  const parts=[`Siap dalam ${fmt(S.elapsed)}`,`${S.mistakes} salah`];
+  if(S.hints)parts.push(`${S.hints} petunjuk`);
+  $('win-text').textContent=parts.join(' · ')+'.';
+  const idx=ORDER.indexOf(S.level),nextBtn=$('next');
+  if(idx<ORDER.length-1){nextBtn.hidden=false;nextBtn.textContent='Cuba level '+LEVELS[ORDER[idx+1]].label;nextBtn.dataset.level=ORDER[idx+1];}
+  else nextBtn.hidden=true;
+  winEl.hidden=false;
+  if(focus)$('again').focus();
+}
+
+function render(){
+  const sel=S.sel,sv=sel>=0?valueAt(sel):0,sr=sel>>2,sc=sel&3;
+  cells.forEach((el,i)=>{
+    const v=valueAt(i),r=i>>2,c=i&3;
+    const peer=sel>=0&&i!==sel&&(r===sr||c===sc||((r>>1)===(sr>>1)&&(c>>1)===(sc>>1)));
+    const same=sv&&i!==sel&&v===sv&&isSolved(i);
+    let cls='cell';
+    if(isGiven(i))cls+=' given';
+    if(isOk(i))cls+=' ok';
+    if(isBad(i))cls+=' bad';
+    if(i===sel)cls+=' sel';
+    if(peer)cls+=' peer';
+    if(same)cls+=' same';
+    if(S.hinted.includes(i))cls+=' hinted';
+    el.className=cls;
+    el.textContent=v||'';
+    let label=`Baris ${r+1}, lajur ${c+1}: `+(v?`nombor ${v}`:'kosong');
+    if(isGiven(i))label+=', soalan';else if(isOk(i))label+=', betul';else if(isBad(i))label+=', salah';
+    el.setAttribute('aria-label',label);
+  });
+  for(let n=1;n<=4;n++){
+    const placed=cells.filter((_,i)=>isSolved(i)&&valueAt(i)===n).length;
+    const left=4-placed;
+    nums[n].disabled=left===0||S.done;
+    nums[n].querySelector('small').textContent=left===0?'cukup':`${left} lagi`;
+    nums[n].setAttribute('aria-label',`Nombor ${n}, ${left} lagi`);
+  }
+  ORDER.forEach(l=>$('lvl-'+l).setAttribute('aria-pressed',String(l===S.level)));
+  $('st-left').textContent=cells.filter((_,i)=>!isSolved(i)).length;
+  $('st-mist').textContent=S.mistakes;
+  $('st-mist-box').classList.toggle('warn',S.mistakes>0);
+  $('st-time').textContent=fmt(elapsed());
+}
+
+/* Events */
+document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>newGame(b.dataset.level)));
+$('erase').addEventListener('click',erase);
+$('hint').addEventListener('click',hint);
+$('new').addEventListener('click',()=>newGame(S.level));
+$('again').addEventListener('click',()=>newGame(S.level));
+$('next').addEventListener('click',e=>newGame(e.currentTarget.dataset.level));
+
+document.addEventListener('keydown',e=>{
+  if(e.metaKey||e.ctrlKey||e.altKey||!S||S.done)return;
+  const k=e.key;
+  if(/^[1-4]$/.test(k)){e.preventDefault();input(+k);return;}
+  if(k==='Backspace'||k==='Delete'||k==='0'){e.preventDefault();erase();return;}
+  const moves={ArrowUp:[-1,0],ArrowDown:[1,0],ArrowLeft:[0,-1],ArrowRight:[0,1]};
+  if(moves[k]){
+    e.preventDefault();
+    if(S.sel<0){select(0,true);return;}
+    const r=(S.sel>>2)+moves[k][0],c=(S.sel&3)+moves[k][1];
+    select(((r+4)%4)*4+((c+4)%4),true);
+  }
+});
+
+setInterval(()=>{if(S&&!S.done)$('st-time').textContent=fmt(elapsed());},500);
+
+/* Keep the game when the page is updated while open */
+window.claude?.hot?.snapshot?.(()=>({S:S?{...S,elapsed:elapsed()}:null}));
+function start(data){
+  const d=data&&data.S;
+  if(d&&Array.isArray(d.solution)&&d.solution.length===16&&LEVELS[d.level]){
+    S=d;startedAt=Date.now()-(d.elapsed||0)*1000;render();
+    if(S.done)showWin(false);else say('Sambung permainan.');
+  }else newGame('mudah');
+}
+window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.hot?.data??{});
+})();
+</script>
+</body>
+</html>

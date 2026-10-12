@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Game memori untuk kanak-kanak: padankan kad soalan dengan kad jawapan.">
+<meta name="theme-color" content="#F3F7FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161C26" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../assets/icon.svg" type="image/svg+xml">
+<title>Padan Kad · Main Nombor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Lexend:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../assets/common.css">
+<style>
+.board-shell{position:relative}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:12px;background:var(--box);border:3px solid var(--edge);border-radius:22px;box-shadow:4px 6px 0 var(--edge)}
+.card{position:relative;aspect-ratio:4/5;width:100%;padding:0;border:0;background:none;cursor:pointer;perspective:700px;container-type:inline-size;-webkit-tap-highlight-color:transparent}
+.card .in{position:absolute;inset:0;transition:transform .38s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d}
+.card.up .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:12px;border:2px solid var(--edge);display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;font-family:var(--f-display);font-weight:800;line-height:1;box-shadow:0 3px 0 var(--edge)}
+.face.cover{background-color:var(--pen);background-image:radial-gradient(rgba(255,255,255,.22) 1.6px,transparent 1.8px);background-size:12px 12px;color:var(--pen-ink);font-size:44cqi}
+.face.front{transform:rotateY(180deg);white-space:nowrap}
+.face.q{background:var(--same);color:var(--ink);font-size:23cqi}
+.face.a{background:var(--tag-bg);color:var(--tag-ink);font-size:44cqi}
+.card.ok .face.front{background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink);box-shadow:0 3px 0 var(--ok)}
+.card.bad .face.front{background:var(--bad-bg);border-color:var(--bad);color:var(--bad-ink);box-shadow:0 3px 0 var(--bad)}
+.card.ok{cursor:default}
+@media (hover:hover){.card:not(.up):hover .face.cover{filter:brightness(1.08)}}
+.card:focus-visible{outline:none}
+.card:focus-visible .face{outline:3px solid var(--sel);outline-offset:2px}
+.legend .chip.q{border-color:var(--pen);background:var(--same);color:var(--ink)}
+.legend .chip.q i{background:var(--pen)}
+.legend .chip.a{border-color:var(--edge);background:var(--tag-bg);color:var(--tag-ink)}
+.legend .chip.a i{background:var(--tag-ink)}
+.actions.one{grid-template-columns:1fr}
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="../../index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Menu</a>
+
+  <header class="top">
+    <div class="brand">
+      <h1>Padan Kad <span class="tag">memori</span></h1>
+      <p>Buka dua kad. Padankan kad soalan (biru) dengan kad jawapan (kuning) yang betul.</p>
+    </div>
+    <div class="levels" role="group" aria-label="Pilih level">
+      <button type="button" class="lvl" id="lvl-mudah" data-level="mudah">Mudah<span class="pips"><i class="on"></i><i></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sederhana" data-level="sederhana">Sederhana<span class="pips"><i class="on"></i><i class="on"></i><i></i></span></button>
+      <button type="button" class="lvl" id="lvl-sukar" data-level="sukar">Sukar<span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span></button>
+    </div>
+  </header>
+
+  <section class="play">
+    <div class="board-col">
+      <div class="stats">
+        <div class="stat"><span>Pasangan</span><b id="st-found">0/0</b></div>
+        <div class="stat"><span>Cubaan</span><b id="st-tries">0</b></div>
+        <div class="stat"><span>Masa</span><b id="st-time">00:00</b></div>
+      </div>
+      <div class="board-shell">
+        <div class="cards" id="cards" role="group" aria-label="Kad memori"></div>
+        <div class="win" id="win" hidden>
+          <div class="stars" id="stars" aria-hidden="true"></div>
+          <h2>Tahniah!</h2>
+          <p id="win-text"></p>
+          <div class="win-actions">
+            <button type="button" class="act primary" id="again">Main lagi</button>
+            <button type="button" class="act" id="next" hidden></button>
+          </div>
+        </div>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <aside class="side">
+      <div class="actions one">
+        <button type="button" class="act primary" id="new"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>Kad baru</button>
+      </div>
+      <div class="rules">
+        <h2>Cara main</h2>
+        <ol>
+          <li>Tekan satu kad untuk buka. Kemudian buka satu kad lagi.</li>
+          <li>Kalau soalan dan jawapan sepadan (contoh <b>3 + 4</b> dan <b>7</b>), kad jadi hijau dan kekal terbuka.</li>
+          <li>Kalau tak sepadan, kad tertutup semula. Cuba ingat di mana kad itu.</li>
+          <li>Kurang cubaan, lebih banyak bintang.</li>
+        </ol>
+        <div class="legend">
+          <span class="chip q"><i></i>Kad soalan</span>
+          <span class="chip a"><i></i>Kad jawapan</span>
+          <span class="chip ok"><i></i>Sepadan</span>
+        </div>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script src="../../assets/common.js"></script>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const r=OG.rand;
+
+/* Level: bilangan pasangan + jenis soalan */
+const LEVELS={
+  mudah:    {label:'Mudah',pairs:4,text:'tambah hingga 10'},
+  sederhana:{label:'Sederhana',pairs:6,text:'tambah & tolak hingga 20'},
+  sukar:    {label:'Sukar',pairs:8,text:'darab sifir 2 hingga 9'}
+};
+const ORDER=['mudah','sederhana','sukar'];
+const words={'+':'tambah','−':'tolak','×':'darab'};
+let S=null,startedAt=0,flipBack=null,winTimer=null;
+
+/* Setiap jawapan unik dalam satu papan supaya hanya satu soalan padan */
+function makePair(level){
+  if(level==='mudah'){const a=r(2,10),x=r(1,a-1);return {a,x,op:'+',y:a-x};}
+  if(level==='sederhana'){
+    const a=r(1,20);
+    if(a>=2&&(a===20||Math.random()<.5)){const x=r(1,a-1);return {a,x,op:'+',y:a-x};}
+    const x=r(a+1,20);return {a,x,op:'−',y:x-a};
+  }
+  const x=r(2,9),y=r(2,9);return {a:x*y,x,op:'×',y};
+}
+
+function newGame(level){
+  const n=LEVELS[level].pairs,used=new Set(),cards=[];
+  let p=0;
+  while(p<n){
+    const pr=makePair(level);
+    if(used.has(pr.a))continue;
+    used.add(pr.a);
+    cards.push({pair:p,kind:'q',text:`${pr.x} ${pr.op} ${pr.y}`,say:`${pr.x} ${words[pr.op]} ${pr.y}`,ans:pr.a});
+    cards.push({pair:p,kind:'a',text:String(pr.a),say:`jawapan ${pr.a}`,ans:pr.a});
+    p++;
+  }
+  clearTimeout(flipBack);clearTimeout(winTimer);
+  S={level,cards:OG.shuffle(cards).map(c=>({...c,up:false,ok:false,bad:false})),first:-1,lock:false,tries:0,found:0,done:false,elapsed:0};
+  startedAt=Date.now();
+  $('win').hidden=true;
+  build();
+  OG.say($('status'),`Level ${LEVELS[level].label}: ${n} pasangan, ${LEVELS[level].text}. Tekan satu kad.`);
+  render();
+}
+
+function build(){
+  const box=$('cards');box.innerHTML='';
+  S.cards.forEach((c,i)=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='card';b.id='card-'+i;
+    b.innerHTML=`<span class="in"><span class="face cover" aria-hidden="true">?</span><span class="face front ${c.kind}">${c.text}</span></span>`;
+    b.addEventListener('click',()=>flip(i));
+    box.appendChild(b);
+  });
+}
+
+function flip(i){
+  if(!S||S.done||S.lock)return;
+  const c=S.cards[i];
+  if(c.ok||c.up)return;
+  c.up=true;
+  if(S.first<0){S.first=i;OG.say($('status'),'Buka satu kad lagi.');render();return;}
+  const j=S.first,d=S.cards[j];
+  S.first=-1;S.tries++;
+  if(c.pair===d.pair){
+    c.ok=d.ok=true;S.found++;
+    const q=c.kind==='q'?c:d;
+    OG.say($('status'),`${OG.praise()} ${q.text} = ${q.ans}`,'good');
+    render();
+    [i,j].forEach(k=>OG.flash($('card-'+k),'pop'));
+    checkWin();
+  }else{
+    S.lock=true;c.bad=d.bad=true;
+    const same=c.kind===d.kind;
+    OG.say($('status'),same?'Dua-dua kad '+(c.kind==='q'?'soalan':'jawapan')+'. Pilih satu soalan dan satu jawapan.':'Tak sepadan. Cuba ingat kedudukan kad ini.','oops');
+    render();
+    [i,j].forEach(k=>OG.flash($('card-'+k),'shake'));
+    flipBack=setTimeout(()=>{c.up=d.up=c.bad=d.bad=false;S.lock=false;render();},1200);
+  }
+}
+
+function stars(){const n=S.cards.length/2;return S.tries<=Math.ceil(n*1.5)?3:S.tries<=Math.ceil(n*2.3)?2:1;}
+
+function checkWin(){
+  if(S.found<S.cards.length/2)return;
+  S.elapsed=Math.floor((Date.now()-startedAt)/1000);S.done=true;
+  OG.saveBest('padan-kad',stars());
+  render();
+  S.cards.forEach((_,k)=>{const el=$('card-'+k);el.style.animationDelay=(k%4+Math.floor(k/4))*70+'ms';OG.flash(el,'wave');});
+  winTimer=setTimeout(showWin,OG.reduce?0:1000);
+}
+
+function showWin(){
+  $('stars').innerHTML=OG.starsHTML(stars());
+  $('win-text').textContent=`Siap dalam ${OG.fmt(S.elapsed)} · ${S.tries} cubaan untuk ${S.cards.length/2} pasangan.`;
+  const idx=ORDER.indexOf(S.level),nx=$('next');
+  if(idx<ORDER.length-1){nx.hidden=false;nx.textContent='Cuba level '+LEVELS[ORDER[idx+1]].label;nx.dataset.level=ORDER[idx+1];}
+  else nx.hidden=true;
+  $('win').hidden=false;$('again').focus({preventScroll:true});
+  OG.say($('status'),'Semua pasangan dijumpai!','good');
+}
+
+const elapsed=()=>S.done?S.elapsed:Math.floor((Date.now()-startedAt)/1000);
+function render(){
+  S.cards.forEach((c,i)=>{
+    const el=$('card-'+i);
+    el.className='card'+(c.up||c.ok?' up':'')+(c.ok?' ok':'')+(c.bad?' bad':'');
+    el.setAttribute('aria-label',`Kad ${i+1}: `+(c.up||c.ok?c.say+(c.ok?', sudah padan':''):'tertutup'));
+  });
+  const n=S.cards.length/2;
+  $('st-found').textContent=`${S.found}/${n}`;
+  $('st-tries').textContent=S.tries;
+  $('st-time').textContent=OG.fmt(elapsed());
+  ORDER.forEach(l=>$('lvl-'+l).setAttribute('aria-pressed',String(l===S.level)));
+}
+
+document.querySelectorAll('.lvl').forEach(b=>b.addEventListener('click',()=>{OG.set('padan-kad:level',b.dataset.level);newGame(b.dataset.level);}));
+$('new').addEventListener('click',()=>newGame(S.level));
+$('again').addEventListener('click',()=>newGame(S.level));
+$('next').addEventListener('click',e=>{const l=e.currentTarget.dataset.level;OG.set('padan-kad:level',l);newGame(l);});
+setInterval(()=>{if(S&&!S.done)$('st-time').textContent=OG.fmt(elapsed());},500);
+
+const saved=OG.get('padan-kad:level','mudah');
+newGame(LEVELS[saved]?saved:'mudah');
+})();
+</script>
+</body>
+</html>
